@@ -135,6 +135,10 @@ class PostgresStuff:
         create_index_qry =  '''CREATE INDEX %s ON %s(%s)''' % (index_name, tbl_name, index_col)
         return PostgresStuff.commit_qry(conn, create_index_qry)
 
+
+    @staticmethod
+    def insert_record(conn, tblname, fields, values):
+        pass
     @staticmethod
     def commit_qry(conn, qry):
         updt_rows = 0

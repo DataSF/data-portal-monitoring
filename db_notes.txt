@@ -1,13 +1,27 @@
-create database monitoring;
-create role ubuntu;
 
-alter user ubuntu with superuser;
-alter user ubuntu with CREATEDB;
-alter user ubuntu with CREATEROLE;
 \du --> shows users
 
 
 \l shows databases
 
+
+
+create database ubuntu;
 ALTER DATABASE ubuntu OWNER TO ubuntu;
+
+alter user ubuntu with CREATEDB;
+alter user ubuntu with CREATEROLE;
+GRANT ALL PRIVILEGES ON DATABASE ubuntu to ubuntu;
+alter user ubuntu with superuser;
+
+create database monitoring;
+GRANT ALL PRIVILEGES ON DATABASE monitoring to ubuntu;
 ALTER DATABASE monitoring OWNER TO ubuntu;
+ALTER USER "ubuntu" WITH PASSWORD 'somepass';
+// add timescaledb extension to the db:
+CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;
+
+
+
+To log on
+//psql -d monitoring -U ubuntu -h localhost
