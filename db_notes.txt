@@ -1,0 +1,13 @@
+create database monitoring;
+create role ubuntu;
+
+alter user ubuntu with superuser;
+alter user ubuntu with CREATEDB;
+alter user ubuntu with CREATEROLE;
+\du --> shows users
+
+
+\l shows databases
+
+ALTER DATABASE ubuntu OWNER TO ubuntu;
+ALTER DATABASE monitoring OWNER TO ubuntu;
