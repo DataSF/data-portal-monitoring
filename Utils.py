@@ -22,6 +22,7 @@ import json
 import time
 import subprocess
 import pandas as pd
+import os 
 
 
 class DateUtils:
@@ -35,7 +36,7 @@ class DateUtils:
         return datetime.datetime.now().strftime("%Y_%m_%d_")
 
     @staticmethod
-    def get_current_timestamp_any_format(dt_format):
+    def getCurrentTimestampAnyFormat(dt_format):
         return datetime.datetime.now().strftime(dt_format)
 
     @staticmethod
@@ -71,7 +72,7 @@ class DateUtils:
         return False
 
     @staticmethod
-    def days_between(d1, dt_fmt1, d2, dt_fmt2):
+    def daysBetween(d1, dt_fmt1, d2, dt_fmt2):
         d1 = datetime.datetime.strptime(d1, dt_fmt1)
         d2 = datetime.datetime.strptime(d2, dt_fmt2)
         return abs((d2 - d1).days)
@@ -160,6 +161,10 @@ class LargeFileUtils:
 
 class FileUtils:
     '''class for file/os util functions'''
+
+    @staticmethod
+    def getCurrentDirFullPath():
+        return os.path.dirname(os.path.realpath(__file__))
     @staticmethod
     def fileExists(file_path):
         return os.path.exists(file_path)

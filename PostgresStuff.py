@@ -137,10 +137,21 @@ class PostgresStuff:
 
 
     @staticmethod
-    def insert_record(conn, tblname, fields, values):
-        pass
+    def insertRecord(conn, tbl_name, header, values):
+        qry = ' INSERT INTO ' +  tbl_name  + ' ( ' + ", ".join(header) + ' ) VALUES (' + ",".join(values) + ") ;"
+        try:
+            inserted_rows = PostgresStuff.commitQry(conn, qry)
+        except Exception, e:
+            print "******"
+            print str(e)
+            print "ERROR: could not insert record"
+            print qry
+            print "*****"
+        return inserted_rows
+    
+
     @staticmethod
-    def commit_qry(conn, qry):
+    def commitQry(conn, qry):
         updt_rows = 0
         try:
             cur = conn.cursor()
@@ -150,9 +161,16 @@ class PostgresStuff:
             # Commit the changes to the database
             conn.commit()
             # Close communication with the PostgreSQL database
+            print "** success**"
+            print qry
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
+            print(str(error))
+            print "***ERROR: could not excute qry*****"
+            print qry
+            print 
+            return error
+            print "*****"
         finally:
             if cur is not None:
                 cur.close()
@@ -168,7 +186,7 @@ class PostgresStuff:
                     pid <> pg_backend_pid()
                     -- don't kill the connections to other databases
                     AND datname = '%s' ''' %(db_name)
-        return PostgresStuff.commit_qry(conn, qry)
+        return PostgresStuff.commitQry(conn, qry)
 
     @staticmethod
     def variablize(text, prefix=''):
@@ -214,7 +232,7 @@ class PostgresStuff:
         drp = PostgresStuff.drop_table(conn, tblname)
         qry = "CREATE table %s as select * from %s;" %(tblname, existing_tblname)
         print qry
-        return PostgresStuff.commit_qry(conn, qry)
+        return PostgresStuff.commitQry(conn, qry)
 
 if __name__ == '__main__':
     main()

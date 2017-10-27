@@ -1,2 +1,4 @@
 configs/database.ini
 *.pyc
+configs/email_config_gmail.yaml
+configs/email_config_server.yaml
