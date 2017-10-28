@@ -1,5 +1,6 @@
 
 # coding: utf-8
+#!/usr/bin/env python
 
 import smtplib
 from email.MIMEMultipart import MIMEMultipart
