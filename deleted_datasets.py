@@ -4,6 +4,8 @@
 from Utils import *
 from ConfigUtils import *
 from PostgresStuff import *
+from PandasUtils import *
+from MonitorPortal import *
 
 def updateDeletedDatasets(conn, deleted_time_iterval):
   #get the datasets that were deleted in the past time interval.
@@ -64,8 +66,23 @@ def updateDeletedDatasets(conn, deleted_time_iterval):
   deleted_datasets = PostgresStuff.commitQry(conn, deleted_datasets_qry)
   return deleted_datasets
 
-def generate_deleted_report(conn):
-  qry = SELECT 
+def generate_deleted_report(conn_alq, configItems):
+  qry = '''
+        SELECT time, datasetid,  name, last_seen, pub_dept, pub_freq, created_at
+        FROM deleted_datasets
+        WHERE ((time > NOW() - interval '60 minutes')  or notification is NULL) 
+      '''
+  sht = MonitorPortal.generateReportSht(conn_alq, qry, 'deleted_datasets')
+  report = MonitorPortal.generateReport( configItems['curr_full_path'], configItems['report_output_dir'], configItems['delete_report_fn'], [sht])
+  print report 
+ 
+
+  #writeWkBks(wkbk_fn, df_shts,
+  #print "**** len results*****"
+  #print len(results)
+  #print results
+  #return results
+
 
 
 def main():
@@ -74,12 +91,17 @@ def main():
   cI =  ConfigUtils(curr_full_path+ "/configs/" , config_fn)
   configItems = cI.getConfigs()
   configItems['config_dir'] = curr_full_path+ "/configs/"
+  configItems['curr_full_path']  = curr_full_path
   db_ini = configItems['config_dir'] + configItems['database_config']
   db_config = PostgresStuff.load_config(filename=db_ini)
   conn_alq, meta_alq =PostgresStuff.connect_alq(db_config)
   conn = PostgresStuff.connect()
   db_tbl = configItems['db_table']
   insert_deleted = updateDeletedDatasets(conn, configItems['deleted_time_iterval'])
+  delete_report = generate_deleted_report(conn_alq, configItems)
+  #wkbk_fn = WkbkUtilsWrite.wkbk_name( )
+  #print  wkbk_fn
+  #deleted_datasets = generate_deleted_report(conn_alq)
 
 
 if __name__ == "__main__":

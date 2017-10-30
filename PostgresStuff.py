@@ -161,8 +161,8 @@ class PostgresStuff:
             # Commit the changes to the database
             conn.commit()
             # Close communication with the PostgreSQL database
-            print "** success**"
-            print qry
+            #print "** success**"
+            #print qry
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:
             print(str(error))

@@ -2,4 +2,5 @@ database_config: database.ini
 db_table: portal_activity
 email_config_file: email_config_gmail.yaml
 deleted_time_iterval: 60 minutes
-delete_report: deleted_datasets
+delete_report_fn: deleted_datasets
+report_output_dir: output
