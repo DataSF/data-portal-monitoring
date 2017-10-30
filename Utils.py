@@ -330,6 +330,23 @@ class WkbkUtils:
         return df
       return dfSht
 
+class WkbkUtilsWrite:
+
+    @staticmethod
+    def wkbk_name(wkbk_base_fn):
+        return wkbk_fn + "_" + DateUtils.get_current_date_year_month_day() + ".xlsx"
+
+    @staticmetnhod
+    def write_wkbk(wkbk_fn, sheets):
+        '''writes workbook with formatting'''
+        writer = pd.ExcelWriter( wkbk_fn,  engine='xlsxwriter' )
+        for sheet_name, sheet_data in sheets.iteritems():
+            sheet[sheet_data].to_excel( writer, index=False,  sheet_name=sheet_name)
+        writer.save()
+        return wkbk_fullpath, self.current_date
+
+
+
 class ListUtils:
     @staticmethod
     def makeChunks( lst, chunkSize,):
