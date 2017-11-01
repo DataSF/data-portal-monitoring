@@ -66,22 +66,19 @@ def updateDeletedDatasets(conn, deleted_time_iterval):
   deleted_datasets = PostgresStuff.commitQry(conn, deleted_datasets_qry)
   return deleted_datasets
 
-def generate_deleted_report(conn_alq, configItems):
+def generateDeletedReport(conn_alq, configItems):
   qry = '''
         SELECT time, datasetid,  name, last_seen, pub_dept, pub_freq, created_at
         FROM deleted_datasets
         WHERE ((time > NOW() - interval '60 minutes')  or notification is NULL) 
       '''
   sht = MonitorPortal.generateReportSht(conn_alq, qry, 'deleted_datasets')
-  report = MonitorPortal.generateReport( configItems['curr_full_path'], configItems['report_output_dir'], configItems['delete_report_fn'], [sht])
-  print report 
- 
-
-  #writeWkBks(wkbk_fn, df_shts,
-  #print "**** len results*****"
-  #print len(results)
-  #print results
-  #return results
+  print sht
+  cols = ['time', 'last_seen', 'created_at']
+  for col in cols:
+    sht['df'][col] =  sht['df'][col].dt.strftime(configItems['dt_format'])
+  email_content =  MonitorPortal.generateEmailContent([sht], configItems,   'delete_report_fn')
+  print email_content
 
 
 
@@ -90,6 +87,7 @@ def main():
   config_fn = 'portal_activity_job_config.yaml'
   cI =  ConfigUtils(curr_full_path+ "/configs/" , config_fn)
   configItems = cI.getConfigs()
+  print configItems
   configItems['config_dir'] = curr_full_path+ "/configs/"
   configItems['curr_full_path']  = curr_full_path
   db_ini = configItems['config_dir'] + configItems['database_config']
@@ -98,7 +96,7 @@ def main():
   conn = PostgresStuff.connect()
   db_tbl = configItems['db_table']
   insert_deleted = updateDeletedDatasets(conn, configItems['deleted_time_iterval'])
-  delete_report = generate_deleted_report(conn_alq, configItems)
+  delete_email_content  = generateDeletedReport(conn_alq, configItems)
   #wkbk_fn = WkbkUtilsWrite.wkbk_name( )
   #print  wkbk_fn
   #deleted_datasets = generate_deleted_report(conn_alq)

@@ -72,6 +72,26 @@ class PandasUtils:
   def makeLookupDictOnTwo(df, key_col, val_col):
       return dict(zip(df[key_col], df[val_col]))
 
+
+  @staticmethod
+  def dfToHTMLTable(df):
+    def html_tags(tag, item):
+      backtag = "</" + tag[1:] 
+      return tag + item +backtag 
+    df_list = PandasUtils.convertDfToDictrows(df)
+    header = [ html_tags('<th>', vals) for vals in df_list[0].keys() ]
+
+    table_rows = ["<table>", "<tr>"] +  header  + ['</tr>']
+    for item in df_list:
+      row = [ html_tags('<td>', vals) for vals in item.values() ]
+      row[0] = '<tr>'
+      row.append('</tr>')
+      table_rows = table_rows + row
+    table_rows.append("</table>")
+    return " ".join(table_rows)
+
+
+
 class PostGresPandas:
 
   @staticmethod
