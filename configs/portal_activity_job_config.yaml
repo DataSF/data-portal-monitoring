@@ -1,7 +1,22 @@
 database_config: database.ini
-db_table: portal_activity
+activity_table: portal_activity
 email_config_file: email_config_gmail.yaml
-deleted_time_iterval: 60 minutes
-delete_report_fn: deleted_datasets
 report_output_dir: output
-dt_format: \%Y-%m-%d %H:%M:%S
+config_dir: /configs/
+
+activity:
+  delete:
+    time_interval:  60 minutes
+    report_fn: deleted_datasets
+    database_table: deleted_datasets
+    dt_format: \%Y-%m-%d %H:%M:%S
+    timestamp_report_notification_col: last_seen
+    email_msg:
+      subject_line: TEST-DELETE PORTAL ACTIVITY LOG 
+      subject_line_action: datasets have been deleted
+      msg_header: <h3>Test - The following datasets have been deleted</h3>
+
+
+email_msg_template:
+  header: <html><head><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"></head><body><container>
+  footer: </container></body></html>

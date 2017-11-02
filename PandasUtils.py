@@ -24,6 +24,11 @@ class PandasUtils:
     return df.drop(list_of_cols_to_remove, axis=1)
     #return df.drop(df[list_of_cols_to_remove],inplace=True,axis=1)
 
+  @staticmethod
+  def castDateFieldsAsString(df, list_of_date_cols, dt_format):
+    for col in list_of_date_cols:
+      df[col] =  df[col].dt.strftime(dt_format)
+    return df
 
   @staticmethod
   def loadCsv(fullpath):

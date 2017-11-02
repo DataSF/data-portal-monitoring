@@ -23,7 +23,7 @@ CREATE TABLE deleted_datasets(
 	time        TIMESTAMPTZ       NOT NULL,
 	datasetid    varchar(250),
 	name 		varchar(250),
-	last_seen  TIMESTAMPTZ       NOT NULL,
+	last_seen  TIMESTAMPTZ NOT NULL,
 	pub_dept   varchar(250), 
  	pub_freq varchar(250),
  	created_at timestamp, 
@@ -31,6 +31,8 @@ CREATE TABLE deleted_datasets(
 );
 
 SELECT create_hypertable('deleted_datasets', 'time');
+#ALTER TABLE deleted_datasets ALTER last_seen TYPE timestamptz USING last_seen AT TIME ZONE '';
+
 
 
 CREATE TABLE created_datasets(

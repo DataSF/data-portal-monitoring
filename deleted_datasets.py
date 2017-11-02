@@ -70,17 +70,27 @@ def generateDeletedReport(conn_alq, configItems):
   qry = '''
         SELECT time, datasetid,  name, last_seen, pub_dept, pub_freq, created_at
         FROM deleted_datasets
-        WHERE ((time > NOW() - interval '60 minutes')  or notification is NULL) 
-      '''
+        WHERE (notification is NULL) 
+      ''' 
   sht = MonitorPortal.generateReportSht(conn_alq, qry, 'deleted_datasets')
-  print sht
+  if len(sht['df']) == 0:
+    return False
+  print sht['df']
   cols = ['time', 'last_seen', 'created_at']
-  for col in cols:
-    sht['df'][col] =  sht['df'][col].dt.strftime(configItems['dt_format'])
-  email_content =  MonitorPortal.generateEmailContent([sht], configItems,   'delete_report_fn')
-  print email_content
+  #print sht['df']['last_seen']
+  sht['df'] = PandasUtils.castDateFieldsAsString( sht['df'], cols, configItems['activity']['delete']['dt_format'])
+  return [sht]
 
 
+def updateNotifiedDatasetIds(configItems, activity, datasetids):
+  print configItems['activity'][activity]['database_table']
+  for dataset in datasetids:
+    qry = """" UPDATE  %s 
+        set notification = 't'
+        WHERE datasetid = '%s' 
+        and last_seen = '%s' """  % (configItems['activity'][activity]['database_table'],dataset['datasetid'], dataset[configItems['activity'][activity]['timestamp_report_notification_col'] ].strip("\\")  )
+    #print update_records(conn, qry)
+    print qry
 
 def main():
   curr_full_path = FileUtils.getCurrentDirFullPath()
@@ -88,18 +98,27 @@ def main():
   cI =  ConfigUtils(curr_full_path+ "/configs/" , config_fn)
   configItems = cI.getConfigs()
   print configItems
-  configItems['config_dir'] = curr_full_path+ "/configs/"
+  configItems['config_dir'] = curr_full_path+ "/" + configItems['config_dir']
   configItems['curr_full_path']  = curr_full_path
   db_ini = configItems['config_dir'] + configItems['database_config']
   db_config = PostgresStuff.load_config(filename=db_ini)
   conn_alq, meta_alq =PostgresStuff.connect_alq(db_config)
   conn = PostgresStuff.connect()
-  db_tbl = configItems['db_table']
-  insert_deleted = updateDeletedDatasets(conn, configItems['deleted_time_iterval'])
-  delete_email_content  = generateDeletedReport(conn_alq, configItems)
-  #wkbk_fn = WkbkUtilsWrite.wkbk_name( )
-  #print  wkbk_fn
-  #deleted_datasets = generate_deleted_report(conn_alq)
+  db_tbl = configItems['activity_table']
+  insert_deleted = updateDeletedDatasets(conn, configItems['activity']['delete']['time_interval'])
+  deleted_datasets  = generateDeletedReport(conn_alq, configItems)
+  print deleted_datasets
+  if (not (deleted_datasets)):
+    print "**** No deleted datasets in the past " + configItems['activity']['delete']['time_interval'] + "*****"
+    exit (0)
+  datasetid_notified = MonitorPortal.generateEmail(conn_alq, configItems, 'delete', deleted_datasets)
+  print datasetid_notified
+  updateNotifiedDatasetIds(configItems, 'delete', datasetid_notified)
+
+
+
+
+  
 
 
 if __name__ == "__main__":
