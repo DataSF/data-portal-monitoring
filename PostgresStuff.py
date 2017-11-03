@@ -105,7 +105,7 @@ class PostgresStuff:
 
     @staticmethod
     def update_records(conn, qry):
-        return PostgresStuff.commit_qry(conn, qry)
+        return PostgresStuff.commitQry(conn, qry)
         #updt_rows = 0
         #try:
         #    cur = conn.cursor()

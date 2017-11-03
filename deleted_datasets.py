@@ -7,6 +7,7 @@ from PostgresStuff import *
 from PandasUtils import *
 from MonitorPortal import *
 
+
 def updateDeletedDatasets(conn, deleted_time_iterval):
   #get the datasets that were deleted in the past time interval.
   #Rather than using NOW(), this query grabs the max time from the portal_activity table
@@ -24,9 +25,10 @@ def updateDeletedDatasets(conn, deleted_time_iterval):
                 LEFT JOIN (
                     SELECT MAX(TIME) AS max_time FROM portal_activity
                 )m ON 1=1
-          WHERE time < m.max_time - interval '60 minutes'
+          WHERE time < m.max_time - interval '%s'
           GROUP BY datasetid
         ) a 
+
         LEFT JOIN 
         (
           SELECT datasetid, max_time, last(time, time)
@@ -38,7 +40,7 @@ def updateDeletedDatasets(conn, deleted_time_iterval):
           GROUP BY datasetid, max_time
         ) b
         ON a.datasetid = b.datasetid
-        WHERE b.datasetid is NULL """ % (deleted_time_iterval)
+        WHERE b.datasetid is NULL """ % (deleted_time_iterval, deleted_time_iterval)
   tmp_deleted_datasets = PostgresStuff.commitQry(conn, tmp_deleted_datasets_qry)
 
   #insert the deleted datasets into the deleted dataset table. 
@@ -66,38 +68,12 @@ def updateDeletedDatasets(conn, deleted_time_iterval):
   deleted_datasets = PostgresStuff.commitQry(conn, deleted_datasets_qry)
   return deleted_datasets
 
-def generateDeletedReport(conn_alq, configItems):
-  qry = '''
-        SELECT time, datasetid,  name, last_seen, pub_dept, pub_freq, created_at
-        FROM deleted_datasets
-        WHERE (notification is NULL) 
-      ''' 
-  sht = MonitorPortal.generateReportSht(conn_alq, qry, 'deleted_datasets')
-  if len(sht['df']) == 0:
-    return False
-  print sht['df']
-  cols = ['time', 'last_seen', 'created_at']
-  #print sht['df']['last_seen']
-  sht['df'] = PandasUtils.castDateFieldsAsString( sht['df'], cols, configItems['activity']['delete']['dt_format'])
-  return [sht]
-
-
-def updateNotifiedDatasetIds(configItems, activity, datasetids):
-  print configItems['activity'][activity]['database_table']
-  for dataset in datasetids:
-    qry = """" UPDATE  %s 
-        set notification = 't'
-        WHERE datasetid = '%s' 
-        and last_seen = '%s' """  % (configItems['activity'][activity]['database_table'],dataset['datasetid'], dataset[configItems['activity'][activity]['timestamp_report_notification_col'] ].strip("\\")  )
-    #print update_records(conn, qry)
-    print qry
 
 def main():
   curr_full_path = FileUtils.getCurrentDirFullPath()
   config_fn = 'portal_activity_job_config.yaml'
   cI =  ConfigUtils(curr_full_path+ "/configs/" , config_fn)
   configItems = cI.getConfigs()
-  print configItems
   configItems['config_dir'] = curr_full_path+ "/" + configItems['config_dir']
   configItems['curr_full_path']  = curr_full_path
   db_ini = configItems['config_dir'] + configItems['database_config']
@@ -106,15 +82,14 @@ def main():
   conn = PostgresStuff.connect()
   db_tbl = configItems['activity_table']
   insert_deleted = updateDeletedDatasets(conn, configItems['activity']['delete']['time_interval'])
-  deleted_datasets  = generateDeletedReport(conn_alq, configItems)
-  print deleted_datasets
+  deleted_datasets  = MonitorPortal.generateActivityReport(conn_alq, configItems, 'delete')
   if (not (deleted_datasets)):
     print "**** No deleted datasets in the past " + configItems['activity']['delete']['time_interval'] + "*****"
     exit (0)
   datasetid_notified = MonitorPortal.generateEmail(conn_alq, configItems, 'delete', deleted_datasets)
-  print datasetid_notified
-  updateNotifiedDatasetIds(configItems, 'delete', datasetid_notified)
-
+  updted_notified_cnt = MonitorPortal.updateNotifiedDatasetIds(conn, configItems, 'delete', datasetid_notified)
+  print "******Notfied that " +str(updted_notified_cnt) + " datasets were deleted****" 
+  print "******Updated " + str(updted_notified_cnt) + " rows in the deleted_dataset table****" 
 
 
 

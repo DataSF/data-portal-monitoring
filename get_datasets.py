@@ -7,8 +7,9 @@ from PostgresStuff import *
 from ConfigUtils import *
 from Emailer import *
 
-def getDataFromWeb():
-  r = requests.get('https://data.sfgov.org/api/search/views.json')
+
+def getDataFromWeb(configItems):
+  r = requests.get(configItems['views_json_url'])
   datasets = r.json()
   return datasets['results']
 
@@ -115,21 +116,19 @@ def main():
   total_inserted_rows = 0
   conn_alq, meta_alq =PostgresStuff.connect_alq(db_config)
   conn = PostgresStuff.connect()
-  db_tbl = configItems['db_table']
-  datasets = getDataFromWeb()
+  db_tbl = configItems['activity_table']
+  datasets = getDataFromWeb(configItems)
   for dataset in datasets:
     fields = parseResults(conn, db_tbl, dataset)
     print fields
     inserted_rows = dumpDatasetRecords(conn, db_tbl, fields)
     if inserted_rows != 0:
-    try:
-      total_inserted_rows += inserted_rows
-    except Exeption, e:
-      print "ERROR: there was an error- did not load row"
+      try:
+        total_inserted_rows += inserted_rows
+      except Exeption, e:
+        print "ERROR: there was an error- did not load row"
   print total_inserted_rows
   sendEmailNotification(configItems, total_inserted_rows)
-
-
 
 
 

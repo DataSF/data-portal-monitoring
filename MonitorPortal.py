@@ -5,7 +5,9 @@
 from PandasUtils import *
 from Utils import *
 from Emailer import *
-
+from datetime import datetime
+from PostgresStuff import *
+from datetime import datetime, timedelta
 class MonitorPortal:
 
   @staticmethod
@@ -16,9 +18,22 @@ class MonitorPortal:
     return sht
 
   @staticmethod
-  def generateReportWkBk(configItems, activity, df_shts):
+  def generateActivityReport(conn_alq, configItems, activity):
+    qry = '''
+        SELECT time, datasetid,  name, %s, pub_dept, pub_freq, created_at
+        FROM %s
+        WHERE (notification is NULL) 
+      ''' % (configItems['activity'][activity]['timestamp_report_notification_col'], configItems['activity'][activity]['database_table'])
+    sht = MonitorPortal.generateReportSht(conn_alq, qry, configItems['activity'][activity]['report_fn'])
+    if len(sht['df']) == 0:
+      return False
+    print sht['df']
+    cols = ['time', configItems['activity'][activity]['timestamp_report_notification_col'], 'created_at']
+    sht['df'] = PandasUtils.castDateFieldsAsString( sht['df'], cols, configItems['activity'][activity]['dt_format'])
+    return [sht]
 
-    return wkbk_fn 
+
+
 
   @staticmethod
   def generateEmailContent(configItems, activity, df_shts):
@@ -59,8 +74,8 @@ class MonitorPortal:
 
     subject_line = configItems['activity'][activity]['email_msg']['subject_line'] + ": " + str(email_content['number_of_actions']) + " " + configItems['activity'][activity]['email_msg']['subject_line_action']
     msg_body = msg_body +  configItems['email_msg_template']['footer']
-    #em = Emailer(configItems)
-    #em.sendEmails(subject_line, msg_body, fname_attachment=email_content['report_attachment_name'], fname_attachment_fullpath= email_content['report_attachment_fullpath'])
+    em = Emailer(configItems)
+    em.sendEmails(subject_line, msg_body.encode('utf-8').strip(), fname_attachment=email_content['report_attachment_name'], fname_attachment_fullpath= email_content['report_attachment_fullpath'])
     return notification_datsetids
 
 
@@ -69,6 +84,25 @@ class MonitorPortal:
     email_content = MonitorPortal.generateEmailContent(configItems, activity, df_sheets)
     return MonitorPortal.generateEmailMsg(configItems, activity,  email_content)
 
-  
+  @staticmethod
+  def updateNotifiedDatasetIds(conn, configItems, activity, datasetids):
+    updt_cnt = 0
+    time_analysis_col =  configItems['activity'][activity]['timestamp_report_notification_col'] 
+    for dataset in datasetids:
+      seen =  dataset[time_analysis_col].strip("\\")
+      seen_obj = datetime.strptime(seen, configItems['activity'][activity]['dt_format'][1:])
+      seen_obj =  seen_obj - timedelta(hours=configItems['time_zone_difference'])
+      seen_str =  seen_obj.strftime(configItems['activity'][activity]['dt_format'])
+      qry = """  
+        UPDATE  %s 
+        SET notification = 't'
+        WHERE datasetid = '%s' 
+        and %s = '%s' """  % (configItems['activity'][activity]['database_table'], dataset['datasetid'],  time_analysis_col,  seen_str[1:] )
+      updated = PostgresStuff.update_records(conn, qry)
+      updt_cnt += updated
+    return updt_cnt
+
+
+
 if __name__ == "__main__":
     main()

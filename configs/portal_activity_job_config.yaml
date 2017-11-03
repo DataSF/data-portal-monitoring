@@ -3,8 +3,22 @@ activity_table: portal_activity
 email_config_file: email_config_gmail.yaml
 report_output_dir: output
 config_dir: /configs/
+time_zone_difference: 7
+
+views_json_url: https://data.sfgov.org/api/search/views.json
+
 
 activity:
+  create:
+    time_interval:  60 minutes
+    report_fn: created_datasets
+    database_table: created_datasets
+    dt_format: \%Y-%m-%d %H:%M:%S
+    timestamp_report_notification_col: first_seen
+    email_msg:
+      subject_line: TEST-CREATE PORTAL ACTIVITY LOG 
+      subject_line_action: datasets have been created
+      msg_header: <h3>Test - The following datasets have been created</h3>
   delete:
     time_interval:  60 minutes
     report_fn: deleted_datasets
