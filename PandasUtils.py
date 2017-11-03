@@ -79,23 +79,24 @@ class PandasUtils:
 
 
   @staticmethod
-  def dfToHTMLTable(df):
+  def dfToHTMLTable(df, headers):
     def html_tags(tag, item):
       backtag = "</" + tag[1:] 
       return tag + item +backtag 
     df_list = PandasUtils.convertDfToDictrows(df)
-    header = [ html_tags('<th>', vals) for vals in df_list[0].keys() ]
-
-    table_rows = ["<table>", "<tr>"] +  header  + ['</tr>']
+    headers = headers.split(', ')
+    header = [ html_tags('<th>', vals) for vals in headers ]
+    table_rows = ['<table style="border-collapse:collapse">', '<tr style="border: 1px solid black;">'] +  header  + ['</tr>']
     for item in df_list:
-      row = [ html_tags('<td>', vals) for vals in item.values() ]
-      row[0] = '<tr>'
+      item_vals = []
+      for col in headers:
+        item_vals.append(item[col])
+      row = [ html_tags('<td style="border: 1px solid black; padding:2px">', vals) for vals in  item_vals]
+      row = ['<tr>'] + row
       row.append('</tr>')
       table_rows = table_rows + row
     table_rows.append("</table>")
     return " ".join(table_rows)
-
-
 
 class PostGresPandas:
 

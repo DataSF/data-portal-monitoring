@@ -29,6 +29,7 @@ CREATE TABLE deleted_datasets(
 	last_seen  TIMESTAMPTZ NOT NULL,
 	pub_dept   varchar(250), 
  	pub_freq varchar(250),
+ 	updated_at timestamp, 
  	created_at timestamp, 
  	notification boolean
 );
@@ -54,16 +55,24 @@ SELECT create_hypertable('created_datasets', 'time');
 
 
 
-CREATE TABLE stale_delayed_datasets(
+DROP TABLE IF EXISTS late_updated_datasets;
+CREATE TABLE late_updated_datasets(
 	time        TIMESTAMPTZ       NOT NULL,
 	datasetid    varchar(250),
 	name 		varchar(250),
-	last_updated  TIMESTAMPTZ       NOT NULL,
+    last_checked TIMESTAMPTZ NOT NULL,
+    pub_health varchar(100),
+	updated_at   timestamp,    
+    pub_freq varchar(250),
+    days_last_updt varchar(100),
 	pub_dept   varchar(250), 
- 	pub_freq varchar(250),
-  	pub_health varchar(100),
-  	days_last_updt varchar(100)
+    created_at timestamp, 
  	notification boolean
 );
-SELECT create_hypertable('stale_delayed_datasets', 'time');
+SELECT create_hypertable('late_updated_datasets', 'time');
+
+
+
+
+
 

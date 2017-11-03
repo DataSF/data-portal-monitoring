@@ -15,22 +15,45 @@ activity:
     database_table: created_datasets
     dt_format: \%Y-%m-%d %H:%M:%S
     timestamp_report_notification_col: first_seen
+    report_cols: time, datasetid, name, first_seen, pub_dept, pub_freq, created_at
     email_msg:
       subject_line: TEST-CREATE PORTAL ACTIVITY LOG 
       subject_line_action: datasets have been created
-      msg_header: <h3>Test - The following datasets have been created</h3>
+      msg_header: <h3>Test - The following datasets have been created:</h3>
   delete:
     time_interval:  60 minutes
     report_fn: deleted_datasets
     database_table: deleted_datasets
     dt_format: \%Y-%m-%d %H:%M:%S
+    report_cols: time, datasetid, name, last_seen, pub_dept, pub_freq, updated_at, created_at
     timestamp_report_notification_col: last_seen
     email_msg:
       subject_line: TEST-DELETE PORTAL ACTIVITY LOG 
       subject_line_action: datasets have been deleted
-      msg_header: <h3>Test - The following datasets have been deleted</h3>
-
+      msg_header: <h3>Test - The following datasets have been deleted:</h3>
+  update:
+    time_interval:  60 minutes
+    report_fn: stale_and_delayed_datasets
+    database_table: late_updated_datasets
+    dt_format: \%Y-%m-%d %H:%M:%S
+    timestamp_report_notification_col: last_checked
+    report_cols: time, datasetid, name, last_checked, pub_health, updated_at, pub_dept, pub_freq, created_at
+    email_msg:
+      subject_line: TEST- STALE and DELAYED DATASETS PORTAL ACTIVITY LOG 
+      subject_line_action: datasets have a publishing health of stale or deleted
+      msg_header: <h3>Test - The following datasets have a publishing health of stale or deleted:</h3>
+  digest: 
+    time_interval:  12 hours
+    report_fn: stale_and_delayed_datasets
+    database_table: late_updated_datasets
+    dt_format: \%Y-%m-%d %H:%M:%S
+    timestamp_report_notification_col: last_checked
+    report_cols: time, datasetid, name, last_checked, pub_health, updated_at, pub_dept, pub_freq, created_at
+    email_msg:
+      subject_line: TEST- STALE and DELAYED DATASETS PORTAL ACTIVITY DIGEST
+      subject_line_action: datasets have a publishing health of stale or deleted
+      msg_header: <h3>Test - The following datasets have a publishing health of stale or deleted:</h3>
 
 email_msg_template:
-  header: <html><head><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"></head><body><container>
+  header:  <html> <head> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"></head><body><container>
   footer: </container></body></html>

@@ -49,9 +49,9 @@ def updateDeletedDatasets(conn, deleted_time_iterval):
 
   deleted_datasets_qry = """
     INSERT INTO deleted_datasets
-      (time, datasetid, name, last_seen, pub_dept, pub_freq, created_at)
+      (time, datasetid, name, last_seen, pub_dept, pub_freq, updated_at, created_at)
       SELECT 
-        NOW(), td.datasetid, pa.name, td.last_seen, pa.pub_dept, pa.pub_freq, pa.created_at
+        NOW(), td.datasetid, pa.name, td.last_seen, pa.pub_dept, pa.pub_freq, pa.updated_at, pa.created_at
       FROM portal_activity pa 
       JOIN tmp_deleted td 
       ON pa.datasetid = td.datasetid and td.last_seen = pa.time

@@ -18,17 +18,18 @@ class MonitorPortal:
     return sht
 
   @staticmethod
-  def generateActivityReport(conn_alq, configItems, activity):
-    qry = '''
-        SELECT time, datasetid,  name, %s, pub_dept, pub_freq, created_at
-        FROM %s
-        WHERE (notification is NULL) 
-      ''' % (configItems['activity'][activity]['timestamp_report_notification_col'], configItems['activity'][activity]['database_table'])
+  def generateActivityReport(conn_alq, configItems, activity, qry=None):
+    if qry == None:
+      qry = '''
+        SELECT %s
+          FROM %s
+          WHERE (notification is NULL) 
+        ''' % (configItems['activity'][activity]['report_cols'], configItems['activity'][activity]['database_table'])
     sht = MonitorPortal.generateReportSht(conn_alq, qry, configItems['activity'][activity]['report_fn'])
     if len(sht['df']) == 0:
       return False
-    print sht['df']
-    cols = ['time', configItems['activity'][activity]['timestamp_report_notification_col'], 'created_at']
+    cols = ['time', configItems['activity'][activity]['timestamp_report_notification_col'], 'created_at', 'updated_at']
+    cols = [col for col in  list(sht['df'].columns) if col in cols ]
     sht['df'] = PandasUtils.castDateFieldsAsString( sht['df'], cols, configItems['activity'][activity]['dt_format'])
     return [sht]
 
@@ -51,7 +52,7 @@ class MonitorPortal:
     for sht in df_shts:
       email_content_sht = {}
       email_content_sht['datasetids'] = MonitorPortal.getDatasetIdsForNotification(sht['df'], configItems['activity'][activity]['timestamp_report_notification_col'])
-      tbl_report_html = PandasUtils.dfToHTMLTable(sht['df'])
+      tbl_report_html = PandasUtils.dfToHTMLTable(sht['df'], configItems['activity'][activity]['report_cols'])
       email_content_sht['report_html']  = tbl_report_html
       email_content_shts.append(email_content_sht)
       email_content['number_of_actions'] += len(sht['df'])
