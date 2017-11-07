@@ -43,9 +43,9 @@ Data quality metrics help you assess if the data on the your open data portal is
 - Help you assess and validate metadata
 
 To come up with data quality metrics, you should focus on these aspects of data quality: 
-- **Correctness/Accuracy**: does the data reflect valid values?
-- **Consistency**: single version of truth or is it different depending on source/version?
-- **Completeness**: is the data complete?
+- Correctness/Accuracy: does the data reflect valid values?
+- Consistency: single version of truth or is it different depending on source/version?
+- Completeness: is the data complete?
 
 As you develop your data quality metrics, you should consider the different levels of granularity of your data. 
 For instance, on DataSF’s open data portal, the majority of data is stored as datasets. Each dataset contains a number of fields/columns. As a result, we chose to analyze our data at the dataset level and the field level. 
@@ -99,15 +99,15 @@ It’s important to note that your motoring metrics will capture a symptom of an
 
 Earlier we outlined three types of monitoring data that can help you investigate the root causes of problems on your open data portal:
 
-- Open Data Activity Metrics: top level metrics that indicate create, read, update, delete and permissioning activities. 
-- Data Quality Metrics: high level measures that let you understand if the data on your open data portal is fit to serve its purpose in a given context
-- Event Metrics: discrete, infrequent occurrences that relate to our open data portal
+- *Open Data Activity Metrics*: top level metrics that indicate create, read, update, delete and permissioning activities. 
+- *Data Quality Metrics*: high level measures that let you understand if the data on your open data portal is fit to serve its purpose in a given context
+- *Event Metrics*: discrete, infrequent occurrences that relate to our open data portal
 
 On the whole, open data activity metrics will surface the most serious symptoms of something awry and should therefore generate the most alerts. However, the other metrics are invaluable for investigating the causes of those symptoms. 
 Thinking about how data portal activities relate to data quality and various events can help you efficiently get to the root of any issues that surface. Understanding the hierarchies between the activity on your open data portal and data quality helps you build a mental model of how various components of your open data portal interact so that you can quickly focus in on the key diagnostic metrics for any incident. When you or your team receives a notification alerting you problem, the following framework below can helpful in systematically investigating an issue.
 
 1. **Start with data activity metrics**
- Start by asking yourself, "What's the problem? How would I characterize it?" At the outset, you need to clearly describe the problem before diving deeper. Next look at the high level open data activity metrics. These will often disclose the source of  problem, or at least steer your investigation in a particular direction. For instance, a user reports that police calls for service dataset, there's no crime data for the last 2 weeks. Looking at your data activity metrics, you would quickly see that the dataset hadn't been updated in two weeks. You would also see that that owner of the dataset changed three weeks ago, helping you further hone in on the cause of the problem. 
+Start by asking yourself, "What's the problem? How would I characterize it?" At the outset, you need to clearly describe the problem before diving deeper. Next look at the high level open data activity metrics. These will often disclose the source of  problem, or at least steer your investigation in a particular direction. For instance, a user reports that police calls for service dataset, there's no crime data for the last 2 weeks. Looking at your data activity metrics, you would quickly see that the dataset hadn't been updated in two weeks. You would also see that that owner of the dataset changed three weeks ago, helping you further hone in on the cause of the problem. 
 2. **Dive into data quality metrics**
 If you haven't found the cause of the issue by inspecting your data activity metrics, examine the your data quality metrics.  You should be able to quickly find an peruse these metrics to look for outliers and anomalies, incomplete data or data that inaccurately describes the real world/doesn't make sense
 3. **Did something change?**
