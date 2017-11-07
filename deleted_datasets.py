@@ -51,7 +51,7 @@ def updateDeletedDatasets(conn, deleted_time_iterval):
     INSERT INTO deleted_datasets
       (time, datasetid, name, last_seen, pub_dept, pub_freq, updated_at, created_at)
       SELECT 
-        NOW(), td.datasetid, pa.name, td.last_seen, pa.pub_dept, pa.pub_freq, pa.updated_at, pa.created_at
+        NOW() AT TIME ZONE 'UTC', td.datasetid, pa.name, td.last_seen, pa.pub_dept, pa.pub_freq, pa.updated_at, pa.created_at
       FROM portal_activity pa 
       JOIN tmp_deleted td 
       ON pa.datasetid = td.datasetid and td.last_seen = pa.time
@@ -77,9 +77,8 @@ def main():
   configItems['config_dir'] = curr_full_path+ "/" + configItems['config_dir']
   configItems['curr_full_path']  = curr_full_path
   db_ini = configItems['config_dir'] + configItems['database_config']
-  db_config = PostgresStuff.load_config(filename=db_ini)
-  conn_alq, meta_alq =PostgresStuff.connect_alq(db_config)
-  conn = PostgresStuff.connect()
+  conn_alq, meta_alq =PostgresStuff.connect_alq(db_ini)
+  conn = PostgresStuff.connect(db_ini)
   db_tbl = configItems['activity_table']
   insert_deleted = updateDeletedDatasets(conn, configItems['activity']['delete']['time_interval'])
   deleted_datasets  = MonitorPortal.generateActivityReport(conn_alq, configItems, 'delete')

@@ -52,6 +52,7 @@ class MonitorPortal:
     for sht in df_shts:
       email_content_sht = {}
       email_content_sht['datasetids'] = MonitorPortal.getDatasetIdsForNotification(sht['df'], configItems['activity'][activity]['timestamp_report_notification_col'])
+     
       tbl_report_html = PandasUtils.dfToHTMLTable(sht['df'], configItems['activity'][activity]['report_cols'])
       email_content_sht['report_html']  = tbl_report_html
       email_content_shts.append(email_content_sht)
@@ -92,14 +93,16 @@ class MonitorPortal:
     for dataset in datasetids:
       seen =  dataset[time_analysis_col].strip("\\")
       seen_obj = datetime.strptime(seen, configItems['activity'][activity]['dt_format'][1:])
-      seen_obj =  seen_obj - timedelta(hours=configItems['time_zone_difference'])
+      #seen_obj =  seen_obj - timedelta(hours=configItems['time_zone_difference'])
       seen_str =  seen_obj.strftime(configItems['activity'][activity]['dt_format'])
-      qry = """  
+      seen_str = seen_str  #for UTC offset
+      updt_qry = """  
+        SET TIME ZONE 'UTC';
         UPDATE  %s 
         SET notification = 't'
         WHERE datasetid = '%s' 
-        and %s = '%s' """  % (configItems['activity'][activity]['database_table'], dataset['datasetid'],  time_analysis_col,  seen_str[1:] )
-      updated = PostgresStuff.update_records(conn, qry)
+        and substring(CAST(%s AS varchar), 1,19) = '%s'; """  % (configItems['activity'][activity]['database_table'], dataset['datasetid'],  time_analysis_col,  seen_str[1:] )
+      updated = PostgresStuff.commitQry(conn, updt_qry)
       updt_cnt += updated
     return updt_cnt
 

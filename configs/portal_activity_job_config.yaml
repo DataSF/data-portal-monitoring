@@ -42,13 +42,13 @@ activity:
       subject_line: TEST- STALE and DELAYED DATASETS PORTAL ACTIVITY LOG 
       subject_line_action: datasets have a publishing health of stale or deleted
       msg_header: <h3>Test - The following datasets have a publishing health of stale or deleted:</h3>
-  digest: 
+  stale_delayed_digest: 
     time_interval:  12 hours
     report_fn: stale_and_delayed_datasets
     database_table: late_updated_datasets
     dt_format: \%Y-%m-%d %H:%M:%S
-    timestamp_report_notification_col: last_checked
-    report_cols: time, datasetid, name, last_checked, pub_health, updated_at, pub_dept, pub_freq, created_at
+    timestamp_report_notification_col: late_as_of
+    report_cols: time, datasetid, name, pub_health, pub_dept, updated_at, pub_freq, days_last_updt, created_at, late_as_of
     email_msg:
       subject_line: TEST- STALE and DELAYED DATASETS PORTAL ACTIVITY DIGEST
       subject_line_action: datasets have a publishing health of stale or deleted

@@ -91,6 +91,7 @@ def parseResults(conn, datasets_tbl, dataset):
   fields.append(days_last_updt)
   fields = [ "'" + str(field.encode('utf-8') ).replace('\'', '') + "'"  if not (field is None) else field for field in fields ]
   fields  = [ 'NULL' if (field is None) else field for field in fields ]
+  fields[0] = "NOW() AT TIME ZONE 'UTC' "
   print fields
   return fields
 
@@ -112,10 +113,9 @@ def main():
   configItems = cI.getConfigs()
   configItems['config_dir'] = curr_full_path+ "/configs/"
   db_ini = configItems['config_dir'] + configItems['database_config']
-  db_config = PostgresStuff.load_config(filename=db_ini)
   total_inserted_rows = 0
-  conn_alq, meta_alq =PostgresStuff.connect_alq(db_config)
-  conn = PostgresStuff.connect()
+  conn_alq, meta_alq =PostgresStuff.connect_alq(db_ini)
+  conn = PostgresStuff.connect(db_ini)
   db_tbl = configItems['activity_table']
   datasets = getDataFromWeb(configItems)
   for dataset in datasets:

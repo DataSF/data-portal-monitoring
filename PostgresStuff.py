@@ -6,12 +6,17 @@ import psycopg2
 from configparser import ConfigParser
 import sqlalchemy
 import re
+import sys
 
 
 class PostgresStuff:
 
     @staticmethod
-    def load_config(filename='configs/database.ini', section='postgresql'):
+    def load_config(filename=None, section='postgresql'):
+        print "****inside***"
+        print filename
+        if filename is None:
+            filename='configs/database.ini'
         # create a parser
         parser = ConfigParser()
         # read config file
@@ -23,18 +28,22 @@ class PostgresStuff:
             for param in params:
                 db[param[0]] = param[1]
         else:
-            raise Exception('Section {0} not found in the {1} file'.format(section, filename))
+            #raise Exception('Section {0} not found in the {1} file'.format(section, filename))
+    
+            print "ERROR: No config file found"
+            return False
         return db
 
 
     @staticmethod
-    def connect():
+    def connect(db_ini=None):
         """ Connect to the PostgreSQL database server """
         conn = None
         curr = None
         try:
             # read connection parameters
-            params = PostgresStuff.load_config()
+            params = PostgresStuff.load_config(db_ini)
+            print params
 
             # connect to the PostgreSQL server
             print('Connecting to the PostgreSQL database...')
@@ -63,12 +72,13 @@ class PostgresStuff:
             print('Database connection closed.')
 
     @staticmethod
-    def connect_alq(db_config):
+    def connect_alq(db_ini):
         '''Returns a connection and a metadata object'''
         # We connect with the help of the PostgreSQL URL
         # postgresql://federer:grandestslam@localhost:5432/tennis
         conn = None
         meta = None
+        db_config = PostgresStuff.load_config(db_ini)
         url = 'postgresql://{}:{}@{}:{}/{}'
         url = url.format(db_config['user'], db_config['password'], db_config['host'], db_config['port'], db_config['database'])
         print url

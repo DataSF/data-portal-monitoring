@@ -1,6 +1,8 @@
 
 -- We start by creating a regular SQL table
 
+SET TIME ZONE 'UTC';
+
 DROP TABLE IF EXISTS portal_activity;
 CREATE TABLE portal_activity (
   time        TIMESTAMPTZ       NOT NULL,
@@ -14,11 +16,15 @@ CREATE TABLE portal_activity (
   days_last_updt varchar(100)
 );
 
+UPDATE  portal_activity
+   SET time = time AT TIME ZONE 'UTC';
+
 -- This creates a hypertable that is partitioned by time
 --   using the values in the `time` column.
-
 SELECT create_hypertable('portal_activity', 'time');
 -- see this for more info: http://docs.timescale.com/latest/api/api-timescaledb#create_hypertable-best-practices
+
+
 
 
 DROP TABLE IF EXISTS deleted_datasets;
@@ -33,6 +39,12 @@ CREATE TABLE deleted_datasets(
  	created_at timestamp, 
  	notification boolean
 );
+UPDATE  deleted_datasets
+   SET time = time AT TIME ZONE 'UTC';
+
+UPDATE  deleted_datasets
+   SET last_seen = last_seen  AT TIME ZONE 'UTC';
+
 
 SELECT create_hypertable('deleted_datasets', 'time');
 #ALTER TABLE deleted_datasets ALTER last_seen TYPE timestamptz USING last_seen AT TIME ZONE '';
@@ -44,13 +56,20 @@ CREATE TABLE created_datasets(
 	datasetid    varchar(250),
 	name 		varchar(250),
 	first_seen  TIMESTAMPTZ       NOT NULL,
-    created_at timestamp, 
+  created_at timestamp, 
 	pub_dept   varchar(250), 
  	pub_freq varchar(250),
  	deleted_last_seen TIMESTAMPTZ , 
-    time_btw_deleted_and_first_seen INTERVAL , 
+  time_btw_deleted_and_first_seen INTERVAL , 
  	notification boolean
 );
+
+UPDATE  created_datasets
+   SET time = time  AT TIME ZONE 'UTC';
+UPDATE  created_datasets
+   SET first_seen = first_seen  AT TIME ZONE 'UTC';
+UPDATE  created_datasets
+   SET deleted_last_seen = deleted_last_seen  AT TIME ZONE 'UTC';
 SELECT create_hypertable('created_datasets', 'time');
 
 
@@ -60,15 +79,21 @@ CREATE TABLE late_updated_datasets(
 	time        TIMESTAMPTZ       NOT NULL,
 	datasetid    varchar(250),
 	name 		varchar(250),
-    last_checked TIMESTAMPTZ NOT NULL,
-    pub_health varchar(100),
+  last_checked TIMESTAMPTZ NOT NULL,
+  pub_health varchar(100),
 	updated_at   timestamp,    
-    pub_freq varchar(250),
-    days_last_updt varchar(100),
+  pub_freq varchar(250),
+  days_last_updt varchar(100),
 	pub_dept   varchar(250), 
-    created_at timestamp, 
+  created_at timestamp, 
  	notification boolean
 );
+
+UPDATE  late_updated_datasets
+   SET time = time  AT TIME ZONE 'UTC';
+UPDATE  late_updated_datasets
+   SET last_checked = last_checked  AT TIME ZONE 'UTC';
+
 SELECT create_hypertable('late_updated_datasets', 'time');
 
 

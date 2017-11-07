@@ -48,7 +48,6 @@ def updateCreatedDatasets(conn, create_time_interval):
         ON b.datasetid = c.datasetid 
         WHERE (b.datasetid is NULL) or (deleted_last_seen < first_seen) 
   """  % ( create_time_interval,  create_time_interval)
-  print tmp_create_datasets_qry
   tmp_deleted_datasets = PostgresStuff.commitQry(conn, tmp_create_datasets_qry)
 
   #insert the created datasets into the create dataset table. 
@@ -61,7 +60,7 @@ def updateCreatedDatasets(conn, create_time_interval):
        deleted_last_seen, time_btw_deleted_and_first_seen
       )
       SELECT 
-        NOW(), tc.datasetid, pa.name, tc.first_seen, pa.created_at,  pa.pub_dept, pa.pub_freq, 
+        NOW() AT TIME ZONE 'UTC', tc.datasetid, pa.name, tc.first_seen, pa.created_at,  pa.pub_dept, pa.pub_freq, 
         tc.deleted_last_seen, tc.time_btw_deleted_and_first_seen
       FROM portal_activity pa 
       JOIN tmp_created tc
@@ -89,9 +88,8 @@ def main():
   configItems['config_dir'] = curr_full_path+ "/" + configItems['config_dir']
   configItems['curr_full_path']  = curr_full_path
   db_ini = configItems['config_dir'] + configItems['database_config']
-  db_config = PostgresStuff.load_config(filename=db_ini)
-  conn_alq, meta_alq =PostgresStuff.connect_alq(db_config)
-  conn = PostgresStuff.connect()
+  conn_alq, meta_alq =PostgresStuff.connect_alq(db_ini)
+  conn = PostgresStuff.connect(db_ini)
   db_tbl = configItems['activity_table']
   insert_created = updateCreatedDatasets(conn, configItems['activity']['create']['time_interval'])
   #print insert_created

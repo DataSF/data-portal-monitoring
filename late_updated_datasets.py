@@ -49,7 +49,7 @@ def updateStaleDelayedDatasets(conn, update_time_interval):
       (  time, datasetid, name, last_checked, pub_health, updated_at, 
           pub_freq, days_last_updt, pub_dept, created_at
       )
-      SELECT NOW(), tu.datasetid, pa.name, tu.last_checked, pa.pub_health, pa.updated_at,  
+      SELECT  NOW() AT TIME ZONE 'UTC', tu.datasetid, pa.name, tu.last_checked, pa.pub_health, pa.updated_at,  
         pa.pub_freq, pa.days_last_updt, pa.pub_dept,pa.created_at
       FROM portal_activity pa 
       JOIN tmp_late_updated tu
@@ -79,17 +79,16 @@ def main():
   configItems['config_dir'] = curr_full_path+ "/" + configItems['config_dir']
   configItems['curr_full_path']  = curr_full_path
   db_ini = configItems['config_dir'] + configItems['database_config']
-  db_config = PostgresStuff.load_config(filename=db_ini)
-  conn_alq, meta_alq =PostgresStuff.connect_alq(db_config)
-  conn = PostgresStuff.connect()
+  conn_alq, meta_alq =PostgresStuff.connect_alq(db_ini)
+  conn = PostgresStuff.connect(db_ini)
   db_tbl = configItems['activity_table']
   insert_late_updated = updateStaleDelayedDatasets(conn, configItems['activity']['update']['time_interval'])
   print insert_late_updated
-  created_datasets  = MonitorPortal.generateActivityReport(conn_alq, configItems, 'update')
-  if (not (created_datasets)):
-    print "**** No new created datasets in the past " + configItems['activity']['update']['time_interval'] + "*****"
+  stale_late_datasets  = MonitorPortal.generateActivityReport(conn_alq, configItems, 'update')
+  if (not (stale_late_datasets)):
+    print "**** No changes for stale or deleyed datasets  " + configItems['activity']['update']['time_interval'] + "*****"
     exit (0)
-  datasetid_notified = MonitorPortal.generateEmail(conn_alq, configItems, 'update', created_datasets)
+  datasetid_notified = MonitorPortal.generateEmail(conn_alq, configItems, 'update', stale_late_datasets)
   updted_notified_cnt = MonitorPortal.updateNotifiedDatasetIds(conn, configItems, 'update', datasetid_notified)
   print "******Notfied that " +str(updted_notified_cnt) + " datasets are late or stale****" 
   print "******Updated" + str(updted_notified_cnt) + " rows in the late_updated_dataset table****" 

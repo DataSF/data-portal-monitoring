@@ -84,7 +84,7 @@ class Emailer():
         server.login(fromaddr, self._password)
         ######
         text = msg.as_string()
-        server.sendmail(fromaddr, toaddr, text)
+        server.sendmail(fromaddr, toaddr.split(','), text)
         server.quit()
 
 

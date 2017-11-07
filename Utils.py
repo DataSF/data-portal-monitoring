@@ -26,6 +26,11 @@ import os
 
 
 class DateUtils:
+
+    @staticmethod
+    def getUtcNowTime():
+        return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+
     @staticmethod
     def get_current_date_month_day_year():
         return datetime.datetime.now().strftime("%m/%d/%Y")
