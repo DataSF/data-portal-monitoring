@@ -13,7 +13,7 @@ from airflow.operators.subdag_operator import SubDagOperator
 
 
 #sudo pkill -9 -f "airflow scheduler"
-
+#airflow scheduler
 #airflow resetdb
 # each Workflow/DAG must have a unique text identifier
 WORKFLOW_DAG_ID = 'data_monitoring_workflow_dag'
