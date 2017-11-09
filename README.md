@@ -1,6 +1,6 @@
 
 
-# Quick Start to Run this Repo:
+# Quick Start :
 
 - This repo uses timescaledb and python to monitor the San Francisco Open Data Portal
 - Specifically, it monitors when datasets are created, deleted and updated
@@ -11,15 +11,17 @@ To run this repo out of the box:
 1. clone the repository
 2. Modify the  email_config.yaml and portal_activity_job_config.yaml file to reflect your situation. 
 3. Then run setup.sh 
-	1. this will build a custom docker image with airflow and the tools in this repo
-	2. docker compose will instantiate a airflow image with the monitoring jobs and a timescaledb database
-	3. all your timescaledb data default into a docker volume, at ./postgres-data. You can change the location of this volume in the docker-compose.yaml file 
+	1. This will build a custom docker image with airflow and the tools in this repo
+	2. Docker compose will instantiate a airflow image with the monitoring jobs and a timescaledb database
+	3. All your timescaledb data default into a docker volume, at ./postgres-data. You can change the location of this volume in the docker-compose.yaml file 
 
 4. Go to http://localhost:8080/admin/ to see the airflow instance run the monitoring jobs
 
-The article below goes more in depth the specifics of monitoring an open data portal.
 
-# [How to Monitor Your Open Data Portal](https://docs.google.com/document/d/1BKHuxtOr0uZMlejgqnUZt-BoVaZ52VBDxXpdFXzLpTU/edit?usp=sharing)
+The article below provides a general overview on how to monitor an municipal open data portal. 
+This repository contains tools to get Open Data Activity Metrics and send out related notifications around these events. 
+
+## [How to Monitor Your Open Data Portal](https://docs.google.com/document/d/1BKHuxtOr0uZMlejgqnUZt-BoVaZ52VBDxXpdFXzLpTU/edit?usp=sharing)
 
 Having monitoring data is a necessary condition for observability into the inner workings of your  open data portal. 
 At DataSF, we strive to:
