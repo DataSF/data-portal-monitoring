@@ -10,8 +10,8 @@ To run this repo out of the box:
 
 1. clone the repository
 2. Modify the  email_config.yaml and portal_activity_job_config.yaml file to reflect your situation. 
-3. Then run setup.sh 
-	1. This will build a custom docker image with airflow and the tools in this repo
+3. Then run `setup.sh`
+	1. This script will build a custom docker image with airflow and the tools in this repo
 	2. Docker compose will instantiate a airflow image with the monitoring jobs and a timescaledb database
 	3. All your timescaledb data default into a docker volume, at ./postgres-data. You can change the location of this volume in the docker-compose.yaml file 
 
