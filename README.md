@@ -6,9 +6,9 @@
 - Specifically, it monitors when datasets are created, deleted and updated
 - When an create, update or update event occurs within a specified monitoring time period, an email alert is sent. 
 
-To run this repo out of the box: 
+*To run this repo out of the box*: 
 
-1. clone the repository
+1. Clone the repository
 2. Modify the  email_config.yaml and portal_activity_job_config.yaml file to reflect your situation. 
 3. Then run `setup.sh`
 	1. This script will build a custom docker image with airflow and the tools in this repo
