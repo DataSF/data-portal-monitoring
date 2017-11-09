@@ -2,9 +2,12 @@
 
 # Quick Start :
 
-- This repo uses timescaledb and python to monitor the San Francisco Open Data Portal
-- Specifically, it monitors when datasets are created, deleted and updated
-- When an create, update or update event occurs within a specified monitoring time period, an email alert is sent. 
+- This repo uses timescaledb and python to monitor the San Francisco Open Data Portal.
+- Specifically, it monitors when datasets are created, deleted and updated.
+- When an create, update or update event occurs within a specified monitoring time period, an email alert is sent to a group of specified group of recipients. 
+- All create, delete, and update events are stored in a timescaledb database for further analysis
+- Apache Airflow handles the scheduling and execution of monitoring jobs. 
+
 
 *To run this repo out of the box*: 
 
