@@ -4,3 +4,4 @@ configs/email_config_gmail.yaml
 configs/email_config_server.yaml
 .DS_Store
 output/*
+dags/__pycache__

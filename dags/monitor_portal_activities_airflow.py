@@ -47,15 +47,16 @@ dag = DAG(
     default_args=WORKFLOW_DEFAULT_ARGS,
 )
 
-get_datasets_cmd = "/usr/local/bin/python2 /Users/j9/Desktop/data-portal-monitoring/get_datasets.py"
+#get_datasets_cmd = "/usr/local/bin/python2 /Users/j9/Desktop/data-portal-monitoring"
+get_datasets_cmd = "python /data-portal-monitoring/get_datasets.py"
 t1 = BashOperator(
         task_id= 'portal_activities',
         bash_command=get_datasets_cmd,
         dag=dag
 )
 
-
-get_deleted_cmd = "/usr/local/bin/python2 /Users/j9/Desktop/data-portal-monitoring/deleted_datasets.py"
+#get_deleted_cmd = "/usr/local/bin/python2 /Users/j9/Desktop/data-portal-monitoring/deleted_datasets.py"
+get_deleted_cmd = "python /data-portal-monitoring/deleted_datasets.py"
 t2 = BashOperator(
         task_id= 'deleted_datasets',
         bash_command=get_deleted_cmd,
@@ -64,7 +65,8 @@ t2 = BashOperator(
 )
 
 
-get_created_cmd = "/usr/local/bin/python2 /Users/j9/Desktop/data-portal-monitoring/created_datasets.py"
+#get_created_cmd = "/usr/local/bin/python2 /Users/j9/Desktop/data-portal-monitoring/created_datasets.py"
+get_created_cmd = "python /data-portal-monitoring/created_datasets.py"
 t3 = BashOperator(
         task_id= 'created_datasets',
         bash_command=get_created_cmd,
@@ -73,7 +75,8 @@ t3 = BashOperator(
 )
 
 
-get_stale_cmd = "/usr/local/bin/python2 /Users/j9/Desktop/data-portal-monitoring/late_updated_datasets.py"
+#get_stale_cmd = "/usr/local/bin/python2 /Users/j9/Desktop/data-portal-monitoring/late_updated_datasets.py"
+get_stale_cmd = "python /data-portal-monitoring/late_updated_datasets.py"
 t4 = BashOperator(
         task_id= 'stale_delayed_datasets',
         bash_command=get_stale_cmd,
@@ -90,8 +93,8 @@ dag2 = DAG(
     schedule_interval='*/10 * * * *',
  )
 
-stale_delayed_datasets_digest_cmd = "/usr/local/bin/python2 /Users/j9/Desktop/data-portal-monitoring/digest_late_updated_datasets.py"
-print stale_delayed_datasets_digest_cmd
+#stale_delayed_datasets_digest_cmd = "/usr/local/bin/python2 /Users/j9/Desktop/data-portal-monitoring/digest_late_updated_datasets.py"
+stale_delayed_datasets_digest_cmd = "python /data-portal-monitoring/digest_late_updated_datasets.py"
 
 t5 = BashOperator(
         task_id='stale_delayed_datasets_digest',
