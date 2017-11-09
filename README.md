@@ -7,13 +7,17 @@
 - When an create, update or update event occurs within a specified monitoring time period, an email alert is sent. 
 
 To run this repo out of the box: 
-	1. clone the repository
-	2. Modify the  email_config.yaml and portal_activity_job_config.yaml file to reflect your situation. 
-	3. Then run setup.sh 
-		a. this will build a custom docker image with airflow and the tools in this repo
-		b. docker compose will instantiate a airflow image with the monitoring jobs and a timescaledb database
-		c. all your timescaledb data default into a docker volume, at ./postgres-data. You can change the location of this volume in the docker-compose.yaml file 
-	4. go to http://localhost:8080/admin/ to see the airflow instance run the monitoring jobs
+
+1. clone the repository
+2. Modify the  email_config.yaml and portal_activity_job_config.yaml file to reflect your situation. 
+3. Then run setup.sh 
+	1. this will build a custom docker image with airflow and the tools in this repo
+	2. docker compose will instantiate a airflow image with the monitoring jobs and a timescaledb database
+	3. all your timescaledb data default into a docker volume, at ./postgres-data. You can change the location of this volume in the docker-compose.yaml file 
+
+4. Go to http://localhost:8080/admin/ to see the airflow instance run the monitoring jobs
+
+The article below goes more in depth the specifics of monitoring an open data portal.
 
 # [How to Monitor Your Open Data Portal](https://docs.google.com/document/d/1BKHuxtOr0uZMlejgqnUZt-BoVaZ52VBDxXpdFXzLpTU/edit?usp=sharing)
 
