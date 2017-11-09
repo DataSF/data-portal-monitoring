@@ -5,4 +5,4 @@ configs/email_config_server.yaml
 .DS_Store
 output/*
 dags/__pycache__
-db_notes.txt
+db_notes_weird.txt
