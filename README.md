@@ -22,9 +22,9 @@
 
 
 The article below provides a general overview on how to monitor an municipal open data portal. 
-This repository contains tools to get Open Data Activity Metrics and send out related notifications around these events. 
+This repository contains tools to continuously gather open data activity metrics and send out related notifications around these events. 
 
-## [How to Monitor Your Open Data Portal](https://docs.google.com/document/d/1BKHuxtOr0uZMlejgqnUZt-BoVaZ52VBDxXpdFXzLpTU/edit?usp=sharing)
+# [How to Monitor Your Open Data Portal](https://docs.google.com/document/d/1BKHuxtOr0uZMlejgqnUZt-BoVaZ52VBDxXpdFXzLpTU/edit?usp=sharing)
 
 Having monitoring data is a necessary condition for observability into the inner workings of your  open data portal. 
 At DataSF, we strive to:
