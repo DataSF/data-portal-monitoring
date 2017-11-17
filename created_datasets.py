@@ -95,12 +95,12 @@ def main():
   #print insert_created
   created_datasets  = MonitorPortal.generateActivityReport(conn_alq, configItems, 'create')
   if (not (created_datasets)):
-    print "**** No new created datasets in the past " + configItems['activity']['create']['time_interval'] + "*****"
+    print ("**** No new created datasets in the past " + configItems['activity']['create']['time_interval'] + "*****")
     exit (0)
   datasetid_notified = MonitorPortal.generateEmail(conn_alq, configItems, 'create', created_datasets)
   updted_notified_cnt = MonitorPortal.updateNotifiedDatasetIds(conn, configItems, 'create', datasetid_notified)
-  print "******Notfied that " +str(updted_notified_cnt) + " datasets were created****" 
-  print "******Updated" + str(updted_notified_cnt) + " rows in the created_dataset table****" 
+  print ("******Notfied that " +str(updted_notified_cnt) + " datasets were created****" )
+  print ("******Updated" + str(updted_notified_cnt) + " rows in the created_dataset table****")
 
 
 

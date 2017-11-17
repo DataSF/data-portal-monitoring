@@ -92,7 +92,7 @@ def parseResults(conn, datasets_tbl, dataset):
   fields = [ "'" + str(field.encode('utf-8') ).replace('\'', '') + "'"  if not (field is None) else field for field in fields ]
   fields  = [ 'NULL' if (field is None) else field for field in fields ]
   fields[0] = "NOW() AT TIME ZONE 'UTC' "
-  print fields
+  #print (fields)
   return fields
 
 def dumpDatasetRecords(conn, datasets_tbl, fields):
@@ -120,14 +120,14 @@ def main():
   datasets = getDataFromWeb(configItems)
   for dataset in datasets:
     fields = parseResults(conn, db_tbl, dataset)
-    print fields
+    print (fields)
     inserted_rows = dumpDatasetRecords(conn, db_tbl, fields)
     if inserted_rows != 0:
       try:
         total_inserted_rows += inserted_rows
-      except Exeption, e:
-        print "ERROR: there was an error- did not load row"
-  print total_inserted_rows
+      except Exeption as e:
+        print ("ERROR: there was an error- did not load row")
+  print (total_inserted_rows)
   sendEmailNotification(configItems, total_inserted_rows)
 
 

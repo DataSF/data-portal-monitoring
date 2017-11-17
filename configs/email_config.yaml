@@ -1,0 +1,8 @@
+server_addr: smtp.gmail.com
+server_port: 587
+email_addr: datasf.etls@gmail.com
+email_pass: M3VqRXN3YVQ=
+recipients: janine.heiser@sfgov.org,jason.lally@sfgov.org
+sender_addr: datasf.etls@gmail.com
+sender_password: M3VqRXN3YVQ=
+bcc:

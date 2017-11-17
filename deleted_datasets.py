@@ -83,12 +83,12 @@ def main():
   insert_deleted = updateDeletedDatasets(conn, configItems['activity']['delete']['time_interval'])
   deleted_datasets  = MonitorPortal.generateActivityReport(conn_alq, configItems, 'delete')
   if (not (deleted_datasets)):
-    print "**** No deleted datasets in the past " + configItems['activity']['delete']['time_interval'] + "*****"
+    print ("**** No deleted datasets in the past " + configItems['activity']['delete']['time_interval'] + "*****")
     exit (0)
   datasetid_notified = MonitorPortal.generateEmail(conn_alq, configItems, 'delete', deleted_datasets)
   updted_notified_cnt = MonitorPortal.updateNotifiedDatasetIds(conn, configItems, 'delete', datasetid_notified)
-  print "******Notfied that " +str(updted_notified_cnt) + " datasets were deleted****" 
-  print "******Updated " + str(updted_notified_cnt) + " rows in the deleted_dataset table****" 
+  print ("******Notfied that " +str(updted_notified_cnt) + " datasets were deleted****" )
+  print ("******Updated " + str(updted_notified_cnt) + " rows in the deleted_dataset table****" )
 
 
 
