@@ -69,8 +69,7 @@ class DateUtils:
             t2_dtt = t2_dtt + datetime.timedelta(hours=offset_t2)
         t1_dtt = t1_dtt.replace(second=0, microsecond=0)
         t2_dtt = t2_dtt.replace(second=0, microsecond=0)
-        #print t1_dtt
-        #print t2_dtt
+  
         if t1_dtt == t2_dtt:
             return False
         elif t1_dtt < t2_dtt:
@@ -154,17 +153,10 @@ class LargeFileUtils:
 
     @staticmethod
     def lineToDict(line, delimiter, header):
-        print line
         line = line.split(delimiter)
-        print len(line)
-        print len(header)
-        print
         #line  = [item.strip().replace("\"", "") for item in line]
         line =  dict(zip(header, line))
-        print
-        print line
-        print
-        print
+    
         return line
 
 class FileUtils:
@@ -207,7 +199,7 @@ class FileUtils:
                 c.close()
                 downloaded = True
         except Exception, e:
-            print str(e)
+            print (str(e) )
         return downloaded
 
     @staticmethod
@@ -243,9 +235,9 @@ class FileUtils:
                     #print data
                     try:
                         writer.writerow({ s:str(v).encode("ascii",  'ignore') for s, v in data.iteritems()  } )
-                    except Exception, e:
-                        print str(e)
-                        print "could not write row"
+                    except Exception as e:
+                        print (str(e))
+                        print ("could not write row")
                 wrote_wkbk = True
             except Exception, e:
                 print str(e)
@@ -259,7 +251,7 @@ class FileUtils:
             with open(output_dir + json_fn, 'w') as f:
                 json.dump(json_object, f, ensure_ascii=False)
                 wroteFile = True
-        except Exception, e:
+        except Exception as e:
             print str(e)
         return wroteFile
 

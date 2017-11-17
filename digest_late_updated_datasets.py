@@ -76,7 +76,7 @@ def main():
   db_tbl = configItems['activity_table']
   digest_items = digestStaleDelayedDatasets(conn_alq, configItems, 'stale_delayed_digest')
   if (not (digest_items)):
-    print "**** No digest items " + configItems['activity']['update']['time_interval'] + "*****"
+    print ("**** No digest items " + configItems['activity']['update']['time_interval'] + "*****")
     exit (0)
   datasetid_notified = MonitorPortal.generateEmail(conn_alq, configItems, 'stale_delayed_digest', digest_items)
  

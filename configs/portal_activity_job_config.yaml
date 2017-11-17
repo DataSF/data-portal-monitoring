@@ -1,6 +1,6 @@
 database_config: database.ini
 activity_table: portal_activity
-email_config_file: email_config_gmail.yaml
+email_config_file: email_config.yaml
 report_output_dir: output
 config_dir: /configs/
 time_zone_difference: 7

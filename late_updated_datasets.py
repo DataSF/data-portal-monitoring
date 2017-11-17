@@ -36,7 +36,7 @@ def updateStaleDelayedDatasets(conn, update_time_interval):
       WHERE pub_health = 'Stale' OR pub_health =  'Delayed'
       ORDER by pub_health desc
     """  % ( update_time_interval)
-  print tmp_stale_datasets_qry
+  print (tmp_stale_datasets_qry)
 
   tmp_updated_datasets = PostgresStuff.commitQry(conn, tmp_stale_datasets_qry )
 
@@ -83,15 +83,15 @@ def main():
   conn = PostgresStuff.connect(db_ini)
   db_tbl = configItems['activity_table']
   insert_late_updated = updateStaleDelayedDatasets(conn, configItems['activity']['update']['time_interval'])
-  print insert_late_updated
+  print (insert_late_updated)
   stale_late_datasets  = MonitorPortal.generateActivityReport(conn_alq, configItems, 'update')
   if (not (stale_late_datasets)):
-    print "**** No changes for stale or deleyed datasets  " + configItems['activity']['update']['time_interval'] + "*****"
+    print ("**** No changes for stale or deleyed datasets  " + configItems['activity']['update']['time_interval'] + "*****")
     exit (0)
   datasetid_notified = MonitorPortal.generateEmail(conn_alq, configItems, 'update', stale_late_datasets)
   updted_notified_cnt = MonitorPortal.updateNotifiedDatasetIds(conn, configItems, 'update', datasetid_notified)
-  print "******Notfied that " +str(updted_notified_cnt) + " datasets are late or stale****" 
-  print "******Updated" + str(updted_notified_cnt) + " rows in the late_updated_dataset table****" 
+  print ("******Notfied that " +str(updted_notified_cnt) + " datasets are late or stale****" )
+  print ("******Updated" + str(updted_notified_cnt) + " rows in the late_updated_dataset table****" )
 
 
   

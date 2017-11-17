@@ -13,8 +13,8 @@ class PostgresStuff:
 
     @staticmethod
     def load_config(filename=None, section='postgresql'):
-        print "****inside***"
-        print filename
+        print ("****inside***")
+        print (filename)
         if filename is None:
             filename='configs/database.ini'
         # create a parser
@@ -30,7 +30,7 @@ class PostgresStuff:
         else:
             #raise Exception('Section {0} not found in the {1} file'.format(section, filename))
     
-            print "ERROR: No config file found"
+            print ("ERROR: No config file found")
             return False
         return db
 
@@ -43,7 +43,7 @@ class PostgresStuff:
         try:
             # read connection parameters
             params = PostgresStuff.load_config(db_ini)
-            print params
+            print (params)
 
             # connect to the PostgreSQL server
             print('Connecting to the PostgreSQL database...')
@@ -81,13 +81,12 @@ class PostgresStuff:
         db_config = PostgresStuff.load_config(db_ini)
         url = 'postgresql://{}:{}@{}:{}/{}'
         url = url.format(db_config['user'], db_config['password'], db_config['host'], db_config['port'], db_config['database'])
-        print url
         try:
             # The return value of create_engine() is our connection object
             conn = sqlalchemy.create_engine(url, client_encoding='utf8')
             # We then bind the connection to MetaData()
             meta = sqlalchemy.MetaData(bind=conn, reflect=True)
-        except Exception, e:
+        except (Exception ) as e:
             print str(e)
 
         return conn, meta
@@ -151,12 +150,12 @@ class PostgresStuff:
         qry = ' INSERT INTO ' +  tbl_name  + ' ( ' + ", ".join(header) + ' ) VALUES (' + ",".join(values) + ") ;"
         try:
             inserted_rows = PostgresStuff.commitQry(conn, qry)
-        except Exception, e:
-            print "******"
+        except (Exception) as e:
+            print ("******")
             print str(e)
-            print "ERROR: could not insert record"
-            print qry
-            print "*****"
+            print ("ERROR: could not insert record")
+            print (qry)
+            print ("*****")
         return inserted_rows
     
 
@@ -176,11 +175,11 @@ class PostgresStuff:
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:
             print(str(error))
-            print "***ERROR: could not excute qry*****"
-            print qry
+            print ("***ERROR: could not excute qry*****")
+            print (qry)
             print 
-            return error
-            print "*****"
+            return (error)
+            print ("*****")
         finally:
             if cur is not None:
                 cur.close()
@@ -241,7 +240,7 @@ class PostgresStuff:
     def copyTable(conn, existing_tblname, tblname):
         drp = PostgresStuff.drop_table(conn, tblname)
         qry = "CREATE table %s as select * from %s;" %(tblname, existing_tblname)
-        print qry
+        print (qry)
         return PostgresStuff.commitQry(conn, qry)
 
 if __name__ == '__main__':

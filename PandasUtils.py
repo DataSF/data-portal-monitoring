@@ -35,8 +35,8 @@ class PandasUtils:
     df = None
     try:
       df = pd.read_csv(fullpath)
-    except Exception, e:
-      print str(e)
+    except Exception as e:
+      print (str(e))
     return df
 
   @staticmethod

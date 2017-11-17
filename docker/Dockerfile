@@ -82,7 +82,7 @@ RUN ls -ltr
 RUN git clone https://github.com/DataSF/data-portal-monitoring.git
 RUN mkdir /data-portal-monitoring/downloads/
 RUN mkdir /data-portal-monitoring/output/
-
+COPY .configs/email_config.yaml 
 
 USER airflow
 WORKDIR ${AIRFLOW_HOME}
