@@ -16,7 +16,7 @@ def getFirstRun(conn):
         having count(*) < 1
     )z
   '''
-  results =  PostgresStuff.commitQry(conn, qry)
+  results =  PostgresStuff.select_records(conn, qry)
   print ("*****")
   print (results)
 
