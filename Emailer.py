@@ -88,7 +88,8 @@ class Emailer():
         server = smtplib.SMTP(self._server, self._server_port)
         ##comment these lines out when using the sfgov email server
         server.starttls()
-        server.login(fromaddr, self._password.decode('utf-8'))
+        password = self._password.decode('utf-8')
+        server.login(fromaddr, password)
         ######
         text = msg.as_string()
         server.sendmail(fromaddr, toaddr.split(','), text)

@@ -99,7 +99,6 @@ def parseResults(conn, datasets_tbl, dataset):
 
 def dumpDatasetRecords(conn, datasets_tbl, fields):
   headers = ["time", "datasetid", "name", "created_at", "updated_at",  "pub_dept", "pub_freq", "pub_health", 'days_last_updt']
-  print (fields)
   row_inserted =  PostgresStuff.insertRecord(conn, datasets_tbl, headers, fields)
   return row_inserted
 
