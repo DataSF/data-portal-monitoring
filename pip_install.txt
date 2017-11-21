@@ -13,3 +13,6 @@ pip3 install inflection
 pip3 install openpyxl
 pip3 install xlsxwriter
 mkdir output
+
+pg_config: listen "*"
+sudo ufw allow 5432

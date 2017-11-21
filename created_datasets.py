@@ -8,6 +8,18 @@ from PandasUtils import *
 from MonitorPortal import *
 
 
+def getFirstRun(conn):
+  qry = '''
+    SELECT  COUNT(*) from (
+      SELECT datasetid, count(*) from portal_activity 
+        GROUP BY datasetid
+        having count(*) < 1
+    )z
+  '''
+  results =  PostgresStuff.commitQry(conn, qry)
+  print ("*****")
+  print (results)
+
 def updateCreatedDatasets(conn, create_time_interval):
   #get the datasets that were created in the past time interval.
   #Also references the deleted table to find instances where a dataset has been created, deleted, and then created
@@ -91,6 +103,8 @@ def main():
   conn_alq, meta_alq =PostgresStuff.connect_alq(db_ini)
   conn = PostgresStuff.connect(db_ini)
   db_tbl = configItems['activity_table']
+  first_run = getFirstRun(conn)
+  print first_run
   insert_created = updateCreatedDatasets(conn, configItems['activity']['create']['time_interval'])
   #print insert_created
   created_datasets  = MonitorPortal.generateActivityReport(conn_alq, configItems, 'create')
