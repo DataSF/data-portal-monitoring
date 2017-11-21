@@ -6,3 +6,5 @@ configs/email_config_server.yaml
 output/*
 dags/__pycache__
 db_notes_weird.txt
+configs/email_config.yaml
+configs/email_config_cp.yaml
