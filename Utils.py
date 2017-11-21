@@ -221,7 +221,7 @@ class FileUtils:
                 #this would remove subdirs
                 #elif os.path.isdir(file_path): shutil.rmtree(file_path)
             except Exception as e:
-                print(e)
+                print(str(e))
 
     @staticmethod
     def write_wkbk_csv(fn, dictList, headerCols):
@@ -240,7 +240,7 @@ class FileUtils:
                         print ("could not write row")
                 wrote_wkbk = True
             except Exception as e:
-                print str(e)
+                print (str(e))
         return wrote_wkbk
 
     @staticmethod
@@ -252,7 +252,7 @@ class FileUtils:
                 json.dump(json_object, f, ensure_ascii=False)
                 wroteFile = True
         except Exception as e:
-            print str(e)
+            print (str(e))
         return wroteFile
 
     @staticmethod
