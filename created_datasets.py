@@ -104,7 +104,7 @@ def main():
   conn = PostgresStuff.connect(db_ini)
   db_tbl = configItems['activity_table']
   first_run = getFirstRun(conn)
-  print first_run
+  print (first_run)
   insert_created = updateCreatedDatasets(conn, configItems['activity']['create']['time_interval'])
   #print insert_created
   created_datasets  = MonitorPortal.generateActivityReport(conn_alq, configItems, 'create')
