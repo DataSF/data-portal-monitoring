@@ -61,7 +61,8 @@ class Emailer():
 
 
     def sendEmails(self,  subject_line, msg_body, fname_attachment=None, fname_attachment_fullpath=None, recipients=None):
-        fromaddr = self._sender
+        fromaddr = str(self._sender)
+        print (fromaddr)
         if(not(recipients)):
             recipients = self._recipients
         toaddr =  recipients
@@ -87,7 +88,7 @@ class Emailer():
         server = smtplib.SMTP(self._server, self._server_port)
         ##comment these lines out when using the sfgov email server
         server.starttls()
-        server.login(fromaddr, self._password)
+        server.login(fromaddr, self._password.decode('utf-8'))
         ######
         text = msg.as_string()
         server.sendmail(fromaddr, toaddr.split(','), text)

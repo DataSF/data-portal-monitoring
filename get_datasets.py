@@ -89,14 +89,17 @@ def parseResults(conn, datasets_tbl, dataset):
   days_last_updt = pub_health[1]
   fields.append(pub_health[0])
   fields.append(days_last_updt)
-  fields = [ "'" + str(field.encode('utf-8') ).replace('\'', '') + "'"  if not (field is None) else field for field in fields ]
+  #fields = [ "'" + str(field.encode('utf-8') ).replace('\'', '') + "'"  if not (field is None) else field for field in fields ]
+  fields = [ "'" + str(field).replace('\'', '') + "'"  if not (field is None) else field for field in fields ]
   fields  = [ 'NULL' if (field is None) else field for field in fields ]
   fields[0] = "NOW() AT TIME ZONE 'UTC' "
   #print (fields)
+  fields = [str(field) for field in fields  ]
   return fields
 
 def dumpDatasetRecords(conn, datasets_tbl, fields):
   headers = ["time", "datasetid", "name", "created_at", "updated_at",  "pub_dept", "pub_freq", "pub_health", 'days_last_updt']
+  print (fields)
   row_inserted =  PostgresStuff.insertRecord(conn, datasets_tbl, headers, fields)
   return row_inserted
 
@@ -120,13 +123,13 @@ def main():
   datasets = getDataFromWeb(configItems)
   for dataset in datasets:
     fields = parseResults(conn, db_tbl, dataset)
-    print (fields)
     inserted_rows = dumpDatasetRecords(conn, db_tbl, fields)
     if inserted_rows != 0:
       try:
         total_inserted_rows += inserted_rows
-      except Exeption as e:
+      except Exception as e:
         print ("ERROR: there was an error- did not load row")
+        print (str(e))
   print (total_inserted_rows)
   sendEmailNotification(configItems, total_inserted_rows)
 
