@@ -87,8 +87,8 @@ class PandasUtils:
     headers = headers.split(', ')
     header = [ html_tags('<th>', vals) for vals in headers ]
     table_rows = ['<table style="border-collapse:collapse">', '<tr style="border: 1px solid black;">'] +  header  + ['</tr>']
-    print len(df_list)
     if (not(df_list is None)):
+      print (len(df_list))
       for item in df_list:
         item_vals = []
         for col in headers:
