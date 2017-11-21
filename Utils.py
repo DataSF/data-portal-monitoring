@@ -198,7 +198,7 @@ class FileUtils:
                 c.perform()
                 c.close()
                 downloaded = True
-        except Exception, e:
+        except Exception as e:
             print (str(e) )
         return downloaded
 
