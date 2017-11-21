@@ -36,7 +36,7 @@ def updateStaleDelayedDatasets(conn, update_time_interval):
       WHERE pub_health = 'Stale' OR pub_health =  'Delayed'
       ORDER by pub_health desc
     """  % ( update_time_interval)
-  print (tmp_stale_datasets_qry)
+  #print (tmp_stale_datasets_qry)
 
   tmp_updated_datasets = PostgresStuff.commitQry(conn, tmp_stale_datasets_qry )
 
