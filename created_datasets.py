@@ -16,6 +16,7 @@ def getFirstRun(conn):
         having count(*) > 1
     )z
   '''
+  print (results)
   results =  PostgresStuff.select_records(conn, qry)
   return results[0][0]
 
