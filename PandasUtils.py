@@ -82,6 +82,8 @@ class PandasUtils:
   def dfToHTMLTable(df, headers):
     def html_tags(tag, item):
       backtag = "</" + tag[1:] 
+      if (item is None):
+        return tag +backtag 
       return tag + item +backtag 
     df_list = PandasUtils.convertDfToDictrows(df)
     headers = headers.split(', ')
