@@ -87,15 +87,17 @@ class PandasUtils:
     headers = headers.split(', ')
     header = [ html_tags('<th>', vals) for vals in headers ]
     table_rows = ['<table style="border-collapse:collapse">', '<tr style="border: 1px solid black;">'] +  header  + ['</tr>']
-    for item in df_list:
-      item_vals = []
-      for col in headers:
-        item_vals.append(item[col])
-      row = [ html_tags('<td style="border: 1px solid black; padding:2px">', vals) for vals in  item_vals]
-      row = ['<tr>'] + row
-      row.append('</tr>')
-      table_rows = table_rows + row
-    table_rows.append("</table>")
+    print len(df_list)
+    if (not(df_list is None)):
+      for item in df_list:
+        item_vals = []
+        for col in headers:
+          item_vals.append(item[col])
+        row = [ html_tags('<td style="border: 1px solid black; padding:2px">', vals) for vals in  item_vals]
+        row = ['<tr>'] + row
+        row.append('</tr>')
+        table_rows = table_rows + row
+      table_rows.append("</table>")
     return " ".join(table_rows)
 
 class PostGresPandas:
