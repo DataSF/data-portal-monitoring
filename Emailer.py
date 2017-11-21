@@ -3,9 +3,13 @@
 #!/usr/bin/env python
 
 import smtplib
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
-from email.MIMEBase import MIMEBase
+#from email.MIMEMultipart import MIMEMultipart
+from email.mime.multipart import MIMEMultipart
+#from email.MIMEText import MIMEText
+#from email.mime.MIMEText import MIMEText
+#from email.MIMEBase import MIMEBase
+from email.mime.base import *
+from email.mime.text import *
 from email import encoders
 import csv
 import time
@@ -17,7 +21,9 @@ import os
 import itertools
 import base64
 import inflection
-import csv, codecs, cStringIO
+import csv, codecs
+#cStringIO
+from io import StringIO
 from ConfigUtils import *
 
 

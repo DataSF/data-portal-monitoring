@@ -87,7 +87,7 @@ class PostgresStuff:
             # We then bind the connection to MetaData()
             meta = sqlalchemy.MetaData(bind=conn, reflect=True)
         except (Exception ) as e:
-            print str(e)
+            print (str(e))
 
         return conn, meta
 
@@ -152,7 +152,7 @@ class PostgresStuff:
             inserted_rows = PostgresStuff.commitQry(conn, qry)
         except (Exception) as e:
             print ("******")
-            print str(e)
+            print (str(e))
             print ("ERROR: could not insert record")
             print (qry)
             print ("*****")
@@ -229,7 +229,7 @@ class PostgresStuff:
                 finfile, tblname, delimiter
             )
         else:
-            print "in here"
+            print ("in here")
             cur.copy_from(
                 finfile, tblname, delimiter, columns=columns
             )

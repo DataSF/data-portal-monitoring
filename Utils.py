@@ -5,7 +5,7 @@ import os
 import itertools
 import base64
 import inflection
-import csv, codecs, cStringIO
+import csv, codecs
 import glob
 import math
 import pycurl
@@ -14,7 +14,8 @@ import pandas as pd
 import requests
 import shutil
 from csv import DictWriter
-from cStringIO import StringIO
+#from cStringIO import StringIO
+from io import StringIO
 import datetime
 import collections
 import os.path

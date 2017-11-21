@@ -1,0 +1,7 @@
+pip3 install inflection
+sudo apt install python3-pip
+pip3 install requests
+pip3 install pycurl 
+pip3 install psycopg2
+pip3 install sqlalchemy
+pip3 install retry
