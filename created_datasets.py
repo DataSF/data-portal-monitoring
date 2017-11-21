@@ -100,7 +100,7 @@ def main():
   datasetid_notified = MonitorPortal.generateEmail(conn_alq, configItems, 'create', created_datasets)
   updted_notified_cnt = MonitorPortal.updateNotifiedDatasetIds(conn, configItems, 'create', datasetid_notified)
   print ("******Notfied that " +str(updted_notified_cnt) + " datasets were created****" )
-  print ("******Updated" + str(updted_notified_cnt) + " rows in the created_dataset table****")
+  print ("******Updated " + str(updted_notified_cnt) + " rows in the created_dataset table****")
 
 
 
