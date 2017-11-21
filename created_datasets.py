@@ -13,12 +13,10 @@ def getFirstRun(conn):
     SELECT  COUNT(*) from (
       SELECT datasetid, count(*) from portal_activity 
         GROUP BY datasetid
-        having count(*) < 1
+        having count(*) > 1
     )z
   '''
   results =  PostgresStuff.select_records(conn, qry)
-  print ("*****")
-  print (results[0][0])
   return results[0][0]
 
 def updateCreatedDatasets(conn, create_time_interval):
@@ -105,7 +103,9 @@ def main():
   conn = PostgresStuff.connect(db_ini)
   db_tbl = configItems['activity_table']
   first_run = getFirstRun(conn)
-  print (first_run)
+  if first_run == 0:
+    print ("****First RUN! No new created datasets in the past " + configItems['activity']['create']['time_interval'] + "*****")
+    exit (0)
   insert_created = updateCreatedDatasets(conn, configItems['activity']['create']['time_interval'])
   #print insert_created
   created_datasets  = MonitorPortal.generateActivityReport(conn_alq, configItems, 'create')
