@@ -239,7 +239,7 @@ class FileUtils:
                         print (str(e))
                         print ("could not write row")
                 wrote_wkbk = True
-            except Exception, e:
+            except Exception as e:
                 print str(e)
         return wrote_wkbk
 
