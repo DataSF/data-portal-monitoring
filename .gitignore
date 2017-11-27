@@ -8,3 +8,5 @@ dags/__pycache__
 db_notes_weird.txt
 configs/email_config.yaml
 configs/email_config_cp.yaml
+pip_install.txt
+install_airflow

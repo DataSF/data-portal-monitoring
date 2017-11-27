@@ -16,3 +16,4 @@ mkdir output
 
 pg_config: listen "*"
 sudo ufw allow 5432
+sudo ufw allow 8080

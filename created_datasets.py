@@ -17,7 +17,7 @@ def getFirstRun(conn):
     )z
   '''
   results =  PostgresStuff.select_records(conn, qry)
-  print (results[0][0])
+  #print (results[0][0])
   return results[0][0]
 
 def updateCreatedDatasets(conn, create_time_interval):

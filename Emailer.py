@@ -71,7 +71,8 @@ class Emailer():
         msg['To'] = recipients
         msg['Subject'] = subject_line
         msg['Bcc'] = self._bcc
-        body = msg_body.decode('utf-8')
+        #body = msg_body.decode('utf-8')
+        body = msg_body.encode().decode()
         msg.attach(MIMEText(body, 'html'))
 
         #Optional Email Attachment:
