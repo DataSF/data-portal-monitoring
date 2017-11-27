@@ -75,7 +75,8 @@ class Emailer():
         try: 
             body = msg_body.encode().decode()
         except Exception as e:
-            body = msg_body.encode("utf-8")
+            print msg_body
+            body = msg_body
         msg.attach(MIMEText(body, 'html'))
 
         #Optional Email Attachment:
