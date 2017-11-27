@@ -115,16 +115,16 @@ digest = SubDagOperator(
     dag=dag,
 )
 
-dag >> t1
-t1 >> t2 
-t1 >> t3 
-t1 >> t4
+dag >> t1 >> t2 >> t3 >> t4
+#t1 >> t2 
+#t2 >> t3 
+#t3 >> t4
 t1 >> digest
 
 #test for dags
 #airflow test data_monitoring_workflow_dag portal_activities 2017-11-27
 #airflow test data_monitoring_workflow_dag deleted_datasets 2017-11-27
 #airflow test data_monitoring_workflow_dag created_datasets 2017-11-27
-airflow test data_monitoring_workflow_dag created_datasets 2017-11-27
-
+#airflow test data_monitoring_workflow_dag stale_delayed_datasets 2017-11-27
+airflow test data_monitoring_workflow_dag.data_monitoring_workflow_dag.digest_dag stale_delayed_datasets_digest 2017-11-27
 
