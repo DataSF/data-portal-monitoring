@@ -24,7 +24,7 @@ WORKFLOW_START_DATE = airflow.utils.dates.days_ago(0)
 
 # schedule/retry intervals are timedelta objects
 # here we execute the DAGs tasks every day
-WORKFLOW_SCHEDULE_INTERVAL = '*/10 * * * *'
+WORKFLOW_SCHEDULE_INTERVAL = '*/30 * * * *'
 
 # default arguments are applied by default to all tasks 
 # in the DAG
@@ -32,9 +32,10 @@ WORKFLOW_DEFAULT_ARGS = {
     'owner': 'j9',
     'depends_on_past': False,
     'start_date': WORKFLOW_START_DATE,
-    'email_on_failure': True,
-    'retries': 1,
+    'email_on_failure': False,
+    'retries': 0,
     'retry_delay': timedelta(minutes=0)
+    'max_active_runs' : 1
 }
 
 BASEPYTHON = "python3 "
@@ -43,6 +44,7 @@ BASEDIR = "/home/j9/data-portal-monitoring/"
 # initialize the DAG
 dag = DAG(
     dag_id=WORKFLOW_DAG_ID,
+    'skip_past',
     start_date=WORKFLOW_START_DATE,
     schedule_interval='*/30 * * * *',
     default_args=WORKFLOW_DEFAULT_ARGS,
