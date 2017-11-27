@@ -34,7 +34,7 @@ WORKFLOW_DEFAULT_ARGS = {
     'start_date': WORKFLOW_START_DATE,
     'email_on_failure': False,
     'retries': 0,
-    'retry_delay': timedelta(minutes=0)
+    'retry_delay': timedelta(minutes=0),
     'max_active_runs' : 1
 }
 
