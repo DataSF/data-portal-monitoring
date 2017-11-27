@@ -20,7 +20,7 @@ WORKFLOW_DAG_ID = 'data_monitoring_workflow_dag'
 
 # start/end times are datetime objects
 # here we start execution on Jan 1st, 2017
-WORKFLOW_START_DATE = airflow.utils.dates.days_ago(2)
+WORKFLOW_START_DATE = airflow.utils.dates.days_ago(0)
 
 # schedule/retry intervals are timedelta objects
 # here we execute the DAGs tasks every day
@@ -83,7 +83,7 @@ t3 = BashOperator(
 
 #get_stale_cmd = "python3 /Users/j9/Desktop/data-portal-monitoring/late_updated_datasets.py"
 #get_stale_cmd = "python /data-portal-monitoring/late_updated_datasets.py"
-get_stale_cmd =. BASEPYTHON + BASEDIR + "late_updated_datasets.py"
+get_stale_cmd = BASEPYTHON + BASEDIR + "late_updated_datasets.py"
 t4 = BashOperator(
         task_id= 'stale_delayed_datasets',
         bash_command=get_stale_cmd,
@@ -121,3 +121,4 @@ t1 >> t3
 t1 >> t4
 t1 >> digest
 
+#airflow test data_monitoring_workflow_dag portal_activities 2017-11-27
