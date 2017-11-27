@@ -55,15 +55,17 @@ def updateStaleDelayedDatasets(conn, update_time_interval):
       JOIN tmp_late_updated tu
         ON pa.datasetid = tu.datasetid and tu.last_checked = pa.time
       LEFT JOIN(
-        SELECT datasetid, last(last_checked, last_checked) as max_last_checked, updated_at
+       
+        SELECT datasetid, last(updated_at, updated_at) as max_updated_at
         FROM  late_updated_datasets
-        GROUP BY datasetid, updated_at
+        GROUP BY datasetid
       ) ud 
       ON ud.datasetid = tu.datasetid
       WHERE  
       (
           (ud.datasetid IS NULL) OR 
-          (ud.updated_at < pa.updated_at and ud.datasetid = tu.datasetid)    
+          ((ud.max_updated_at < pa.updated_at) and (ud.datasetid = tu.datasetid))   
+ 
    
       ) 
     """
@@ -85,6 +87,7 @@ def main():
   insert_late_updated = updateStaleDelayedDatasets(conn, configItems['activity']['update']['time_interval'])
   print (insert_late_updated)
   stale_late_datasets  = MonitorPortal.generateActivityReport(conn_alq, configItems, 'update')
+  print ( stale_late_datasets)
   if (not (stale_late_datasets)):
     print ("**** No changes for stale or deleyed datasets  " + configItems['activity']['update']['time_interval'] + "*****")
     exit (0)
