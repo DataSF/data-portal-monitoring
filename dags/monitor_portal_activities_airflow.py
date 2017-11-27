@@ -44,7 +44,7 @@ BASEDIR = "/home/j9/data-portal-monitoring/"
 dag = DAG(
     dag_id=WORKFLOW_DAG_ID,
     start_date=WORKFLOW_START_DATE,
-    schedule_interval='*/10 * * * *',
+    schedule_interval='*/30 * * * *',
     default_args=WORKFLOW_DEFAULT_ARGS,
 )
 
@@ -126,5 +126,5 @@ t1 >> digest
 #airflow test data_monitoring_workflow_dag deleted_datasets 2017-11-27
 #airflow test data_monitoring_workflow_dag created_datasets 2017-11-27
 #airflow test data_monitoring_workflow_dag stale_delayed_datasets 2017-11-27
-airflow test data_monitoring_workflow_dag.data_monitoring_workflow_dag.digest_dag stale_delayed_datasets_digest 2017-11-27
+#airflow test data_monitoring_workflow_dag.data_monitoring_workflow_dag.digest_dag stale_delayed_datasets_digest 2017-11-27
 
