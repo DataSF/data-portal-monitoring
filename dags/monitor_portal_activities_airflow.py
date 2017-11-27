@@ -44,7 +44,6 @@ BASEDIR = "/home/j9/data-portal-monitoring/"
 # initialize the DAG
 dag = DAG(
     dag_id=WORKFLOW_DAG_ID,
-    'skip_past',
     start_date=WORKFLOW_START_DATE,
     schedule_interval='*/30 * * * *',
     default_args=WORKFLOW_DEFAULT_ARGS,
@@ -68,7 +67,7 @@ t2 = BashOperator(
         task_id= 'deleted_datasets',
         bash_command=get_deleted_cmd,
         dag=dag,
-        depends_on_past=True
+        #depends_on_past=False
 )
 
 
@@ -79,7 +78,7 @@ t3 = BashOperator(
         task_id= 'created_datasets',
         bash_command=get_created_cmd,
         dag=dag,
-        depends_on_past=True
+        #depends_on_past=True
 )
 
 
@@ -90,7 +89,7 @@ t4 = BashOperator(
         task_id= 'stale_delayed_datasets',
         bash_command=get_stale_cmd,
         dag=dag,
-        depends_on_past=True
+        #depends_on_past=True
 )
 
 
