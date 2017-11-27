@@ -97,7 +97,7 @@ dag2 = DAG(
     dag_id='data_monitoring_workflow_dag.data_monitoring_workflow_dag.digest_dag', 
     default_args=WORKFLOW_DEFAULT_ARGS,
     start_date=WORKFLOW_START_DATE,
-    schedule_interval='*/59 * * * *',
+    schedule_interval='*/30 * * * *',
  )
 
 #stale_delayed_datasets_digest_cmd = "python2 /Users/j9/Desktop/data-portal-monitoring/digest_late_updated_datasets.py"
@@ -121,4 +121,10 @@ t1 >> t3
 t1 >> t4
 t1 >> digest
 
+#test for dags
 #airflow test data_monitoring_workflow_dag portal_activities 2017-11-27
+#airflow test data_monitoring_workflow_dag deleted_datasets 2017-11-27
+#airflow test data_monitoring_workflow_dag created_datasets 2017-11-27
+airflow test data_monitoring_workflow_dag created_datasets 2017-11-27
+
+

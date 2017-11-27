@@ -75,7 +75,6 @@ class Emailer():
         try: 
             body = msg_body.encode().decode()
         except Exception as e:
-            print (msg_body)
             body = msg_body.decode()
         msg.attach(MIMEText(body, 'html'))
 
