@@ -58,7 +58,7 @@ t1 = BashOperator(
         task_id= 'portal_activities',
         bash_command=get_datasets_cmd,
         dag=dag,
-        depends_on_past=False
+        #depends_on_past=False
 )
 
 #get_deleted_cmd = "/usr/local/bin/python3 /Users/j9/Desktop/data-portal-monitoring/deleted_datasets.py"
@@ -68,7 +68,7 @@ t2 = BashOperator(
         task_id= 'deleted_datasets',
         bash_command=get_deleted_cmd,
         dag=dag,
-        depends_on_past=False
+        #depends_on_past=False
 )
 
 
@@ -79,7 +79,7 @@ t3 = BashOperator(
         task_id= 'created_datasets',
         bash_command=get_created_cmd,
         dag=dag,
-        depends_on_past=False
+        #depends_on_past=False
 )
 
 
@@ -109,14 +109,15 @@ t5 = BashOperator(
         task_id='stale_delayed_datasets_digest',
         bash_command=stale_delayed_datasets_digest_cmd,
         dag=dag2
-        
+        #depends_on_past=False
+
 )
 
 digest = SubDagOperator(
     subdag=dag2,
     task_id= 'data_monitoring_workflow_dag.digest_dag',
     dag=dag,
-    depends_on_past=False
+    #depends_on_past=False
 
 )
 
