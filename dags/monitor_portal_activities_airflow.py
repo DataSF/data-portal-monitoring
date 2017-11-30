@@ -9,7 +9,7 @@ from builtins import range
 from airflow.operators.bash_operator import BashOperator
 from airflow.models import DAG
 from datetime import timedelta
-from airflow.operators.subdag_operator import SubDagOperator
+#from airflow.operators.subdag_operator import SubDagOperator
 from airflow.operators.latest_only_operator import LatestOnlyOperator
 from airflow.utils.trigger_rule import TriggerRule
 
@@ -92,35 +92,11 @@ t4 = BashOperator(
 )
 
 
-DIGEST_DAG_ID = 'portal_monitoring_digest_stale_and_delayed'
-dag2 = DAG(
-    dag_id='late_updated_digest_dag', 
-    default_args=WORKFLOW_DEFAULT_ARGS,
-    start_date=WORKFLOW_START_DATE,
-    schedule_interval='01 * * * *',
-
- )
-
-#stale_delayed_datasets_digest_cmd = "python2 /Users/j9/Desktop/data-portal-monitoring/digest_late_updated_datasets.py"
-#stale_delayed_datasets_digest_cmd = "python /data-portal-monitoring/digest_late_updated_datasets.py"
-stale_delayed_datasets_digest_cmd = BASEPYTHON + BASEDIR + "digest_late_updated_datasets.py"
-t5 = BashOperator(
-        task_id='stale_delayed_datasets_digest',
-        bash_command=stale_delayed_datasets_digest_cmd,
-        dag=dag2
-)
-
-t11 = BashOperator(
-        task_id= 'portal_activities',
-        bash_command=get_datasets_cmd,
-        dag=dag2
-        #depends_on_past=False
-)
-
 #digest = SubDagOperator(
 #    subdag=dag2,
 #    task_id= 'data_monitoring_workflow_dag.digest_dag',
 #    dag=dag,
+
 #)
 
 #dag >> t1 #>> t2 >> t3 >> t4
@@ -132,11 +108,37 @@ t3.set_upstream(t1)
 t4.set_upstream(t1)
 #t1 >> digest
 
-#dag2 >> t11
 
+#run thje digest every 12 hours
+dag2 = DAG(
+    dag_id='late_updated_digest_dag', 
+    default_args=WORKFLOW_DEFAULT_ARGS,
+    start_date=WORKFLOW_START_DATE,
+    schedule_interval='0 */12 * * *',
+ )
+
+#stale_delayed_datasets_digest_cmd = "python2 /Users/j9/Desktop/data-portal-monitoring/digest_late_updated_datasets.py"
+#stale_delayed_datasets_digest_cmd = "python /data-portal-monitoring/digest_late_updated_datasets.py"
+stale_delayed_datasets_digest_cmd = BASEPYTHON + BASEDIR + "digest_late_updated_datasets.py"
+t5 = BashOperator(
+        task_id='stale_delayed_datasets_digest',
+        bash_command=stale_delayed_datasets_digest_cmd,
+        dag=dag2
+)
+
+get_datasets_cmd =  BASEPYTHON + BASEDIR + "get_datasets.py"
+t11 = BashOperator(
+        task_id= 'portal_activities',
+        bash_command=get_datasets_cmd,
+        dag=dag2
+)
 latest_only2 = LatestOnlyOperator(task_id='latest_only2', dag=dag2)
 t11.set_upstream(latest_only2)
 t5.set_upstream(t11)
+
+#dag2 >> t11
+
+
 
 #test for dags
 #airflow test data_monitoring_workflow_dag portal_activities 2017-11-27
@@ -144,4 +146,6 @@ t5.set_upstream(t11)
 #airflow test data_monitoring_workflow_dag created_datasets 2017-11-27
 #airflow test data_monitoring_workflow_dag stale_delayed_datasets 2017-11-27
 #airflow test data_monitoring_workflow_dag.data_monitoring_workflow_dag.digest_dag stale_delayed_datasets_digest 2017-11-27
+
+#You don't need to backfill if you a use a latest ONly operator. Just skips all past runs.
 #airflow backfill data_monitoring_workflow_dag -m -s "2017-11-30T00:00" -e "2017-11-30T12:00" 
