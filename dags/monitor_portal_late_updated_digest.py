@@ -10,7 +10,7 @@ from airflow.utils.trigger_rule import TriggerRule
 
 # schedule/retry intervals are timedelta objects
 # here we execute the DAGs tasks every day
-WORKFLOW_SCHEDULE_INTERVAL = '*/30 * * * *'
+WORKFLOW_START_DATE = airflow.utils.dates.days_ago(0)
 
 # default arguments are applied by default to all tasks 
 # in the DAG
@@ -28,14 +28,12 @@ BASEPYTHON = "python3 "
 BASEDIR = "/home/j9/data-portal-monitoring/"
 
 
-
-#DIGEST_DAG_ID = 'portal_monitoring_digest_stale_and_delayed'
+#run thje digest every 12 hours
 dag2 = DAG(
     dag_id='late_updated_digest_dag', 
     default_args=WORKFLOW_DEFAULT_ARGS,
     start_date=WORKFLOW_START_DATE,
-    schedule_interval='01 * * * *',
-
+    schedule_interval='0 */12 * * *',
  )
 
 #stale_delayed_datasets_digest_cmd = "python2 /Users/j9/Desktop/data-portal-monitoring/digest_late_updated_datasets.py"
