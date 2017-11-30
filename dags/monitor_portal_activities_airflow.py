@@ -116,12 +116,12 @@ t11 = BashOperator(
         dag=dag2
         #depends_on_past=False
 )
-digest = SubDagOperator(
-    subdag=dag2,
-    task_id= 'data_monitoring_workflow_dag.digest_dag',
-    dag=dag,
 
-)
+#digest = SubDagOperator(
+#    subdag=dag2,
+#    task_id= 'data_monitoring_workflow_dag.digest_dag',
+#    dag=dag,
+#)
 
 #dag >> t1 #>> t2 >> t3 >> t4
 
