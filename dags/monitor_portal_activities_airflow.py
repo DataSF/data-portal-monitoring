@@ -35,7 +35,9 @@ WORKFLOW_DEFAULT_ARGS = {
     'email_on_failure': False,
     'retries': 0,
     'retry_delay': timedelta(minutes=0),
-    'max_active_runs' : 1
+    'max_active_runs' : 1,
+     catchup=False,
+
 }
 
 BASEPYTHON = "python3 "
@@ -99,7 +101,7 @@ dag2 = DAG(
     dag_id='data_monitoring_workflow_dag.data_monitoring_workflow_dag.digest_dag', 
     default_args=WORKFLOW_DEFAULT_ARGS,
     start_date=WORKFLOW_START_DATE,
-    schedule_interval='*/30 * * * *',
+    schedule_interval='01 * * * *',
  )
 
 #stale_delayed_datasets_digest_cmd = "python2 /Users/j9/Desktop/data-portal-monitoring/digest_late_updated_datasets.py"
@@ -117,7 +119,6 @@ digest = SubDagOperator(
     subdag=dag2,
     task_id= 'data_monitoring_workflow_dag.digest_dag',
     dag=dag,
-    #depends_on_past=False
 
 )
 
@@ -125,6 +126,9 @@ dag >> t1 #>> t2 >> t3 >> t4
 t1 >> t2 
 t2 >> t3 
 t3 >> t4
+#t1 >> digest
+
+dag2 >> t1
 t1 >> digest
 
 #test for dags
