@@ -9,4 +9,5 @@ db_notes_weird.txt
 configs/email_config.yaml
 configs/email_config_cp.yaml
 pip_install.txt
-install_airflow
+install_airflow_private.txt
+install_airflow.txt
