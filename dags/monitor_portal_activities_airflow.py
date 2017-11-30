@@ -36,7 +36,7 @@ WORKFLOW_DEFAULT_ARGS = {
     'retries': 0,
     'retry_delay': timedelta(minutes=0),
     'max_active_runs' : 1,
-     catchup=False,
+
 
 }
 
@@ -49,6 +49,7 @@ dag = DAG(
     start_date=WORKFLOW_START_DATE,
     schedule_interval='*/30 * * * *',
     default_args=WORKFLOW_DEFAULT_ARGS,
+    catchup=False,
 )
 
 
@@ -102,6 +103,7 @@ dag2 = DAG(
     default_args=WORKFLOW_DEFAULT_ARGS,
     start_date=WORKFLOW_START_DATE,
     schedule_interval='01 * * * *',
+    catchup=False,
  )
 
 #stale_delayed_datasets_digest_cmd = "python2 /Users/j9/Desktop/data-portal-monitoring/digest_late_updated_datasets.py"
