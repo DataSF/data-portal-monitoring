@@ -9,7 +9,7 @@ from builtins import range
 from airflow.operators.bash_operator import BashOperator
 from airflow.models import DAG
 from datetime import timedelta
-#from airflow.operators.subdag_operator import SubDagOperator
+from airflow.operators.subdag_operator import SubDagOperator
 from airflow.operators.latest_only_operator import LatestOnlyOperator
 from airflow.utils.trigger_rule import TriggerRule
 
