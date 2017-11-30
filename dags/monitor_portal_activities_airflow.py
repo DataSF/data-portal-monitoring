@@ -9,7 +9,9 @@ from builtins import range
 from airflow.operators.bash_operator import BashOperator
 from airflow.models import DAG
 from datetime import timedelta
-from airflow.operators.subdag_operator import SubDagOperator
+#from airflow.operators.subdag_operator import SubDagOperator
+from airflow.operators.latest_only_operator import LatestOnlyOperator
+from airflow.utils.trigger_rule import TriggerRule
 
 
 #sudo pkill -9 -f "airflow scheduler"
@@ -121,13 +123,19 @@ digest = SubDagOperator(
 
 )
 
-dag >> t1 #>> t2 >> t3 >> t4
+#dag >> t1 #>> t2 >> t3 >> t4
+
+latest_only = LatestOnlyOperator(task_id='latest_only', dag=dag)
+t1.set_upstream(latest_only)
 t2.set_upstream(t1) 
 t3.set_upstream(t1)
 t4.set_upstream(t1)
 #t1 >> digest
 
-dag2 >> t11
+#dag2 >> t11
+
+latest_only2 = LatestOnlyOperator(task_id='latest_only2', dag=dag2)
+t1.set_upstream(latest_only2)
 t5.set_upstream(t11)
 
 #test for dags
