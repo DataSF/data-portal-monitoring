@@ -114,9 +114,14 @@ t5 = BashOperator(
         bash_command=stale_delayed_datasets_digest_cmd,
         dag=dag2
         #depends_on_past=False
-
 )
 
+t11 = BashOperator(
+        task_id= 'portal_activities',
+        bash_command=get_datasets_cmd,
+        dag=dag2,
+        #depends_on_past=False
+)
 digest = SubDagOperator(
     subdag=dag2,
     task_id= 'data_monitoring_workflow_dag.digest_dag',
@@ -130,8 +135,8 @@ t2 >> t3
 t3 >> t4
 #t1 >> digest
 
-dag2 >> t1
-t1 >> digest
+dag2 >> t11
+t11 >> t5
 
 #test for dags
 #airflow test data_monitoring_workflow_dag portal_activities 2017-11-27
