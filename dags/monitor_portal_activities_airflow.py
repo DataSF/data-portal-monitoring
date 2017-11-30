@@ -71,6 +71,7 @@ t2 = BashOperator(
         task_id= 'deleted_datasets',
         bash_command=get_deleted_cmd,
         dag=dag,
+        trigger_rule="all_done",
         #depends_on_past=False
 )
 
@@ -82,6 +83,7 @@ t3 = BashOperator(
         task_id= 'created_datasets',
         bash_command=get_created_cmd,
         dag=dag,
+         trigger_rule="all_done",
         #depends_on_past=False
 )
 
@@ -93,7 +95,7 @@ t4 = BashOperator(
         task_id= 'stale_delayed_datasets',
         bash_command=get_stale_cmd,
         dag=dag,
-        depends_on_past=False
+        trigger_rule="all_done",
 )
 
 
@@ -113,6 +115,7 @@ t5 = BashOperator(
         task_id='stale_delayed_datasets_digest',
         bash_command=stale_delayed_datasets_digest_cmd,
         dag=dag2
+        trigger_rule="all_done",
         #depends_on_past=False
 )
 
