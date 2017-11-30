@@ -111,7 +111,7 @@ t4.set_upstream(t1)
 
 #run thje digest every 12 hours
 dag2 = DAG(
-    dag_id='late_updated_digest_dag', 
+    dag_id='data_monitoring_late_updated_digest_dag', 
     default_args=WORKFLOW_DEFAULT_ARGS,
     start_date=WORKFLOW_START_DATE,
     schedule_interval='0 */12 * * *',
