@@ -94,7 +94,7 @@ t4 = BashOperator(
 
 DIGEST_DAG_ID = 'portal_monitoring_digest_stale_and_delayed'
 dag2 = DAG(
-    dag_id='data_monitoring_workflow_dag.data_monitoring_workflow_dag.digest_dag', 
+    dag_id='late_updated_digest_dag', 
     default_args=WORKFLOW_DEFAULT_ARGS,
     start_date=WORKFLOW_START_DATE,
     schedule_interval='01 * * * *',
@@ -135,7 +135,7 @@ t4.set_upstream(t1)
 #dag2 >> t11
 
 latest_only2 = LatestOnlyOperator(task_id='latest_only2', dag=dag2)
-t1.set_upstream(latest_only2)
+t11.set_upstream(latest_only2)
 t5.set_upstream(t11)
 
 #test for dags
