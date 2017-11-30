@@ -36,8 +36,6 @@ WORKFLOW_DEFAULT_ARGS = {
     'retries': 0,
     'retry_delay': timedelta(minutes=0),
     'max_active_runs' : 1,
-
-
 }
 
 BASEPYTHON = "python3 "
@@ -49,7 +47,6 @@ dag = DAG(
     start_date=WORKFLOW_START_DATE,
     schedule_interval='*/30 * * * *',
     default_args=WORKFLOW_DEFAULT_ARGS,
-    catchup=False,
 )
 
 
@@ -60,8 +57,7 @@ get_datasets_cmd =  BASEPYTHON + BASEDIR + "get_datasets.py"
 t1 = BashOperator(
         task_id= 'portal_activities',
         bash_command=get_datasets_cmd,
-        dag=dag,
-        #depends_on_past=False
+        dag=dag
 )
 
 #get_deleted_cmd = "/usr/local/bin/python3 /Users/j9/Desktop/data-portal-monitoring/deleted_datasets.py"
@@ -70,9 +66,7 @@ get_deleted_cmd = BASEPYTHON + BASEDIR + "deleted_datasets.py"
 t2 = BashOperator(
         task_id= 'deleted_datasets',
         bash_command=get_deleted_cmd,
-        dag=dag,
-        trigger_rule="all_done",
-        #depends_on_past=False
+        dag=dag
 )
 
 
@@ -82,9 +76,7 @@ get_created_cmd = BASEPYTHON + BASEDIR + "created_datasets.py"
 t3 = BashOperator(
         task_id= 'created_datasets',
         bash_command=get_created_cmd,
-        dag=dag,
-         trigger_rule="all_done",
-        #depends_on_past=False
+        dag=dag
 )
 
 
@@ -94,8 +86,7 @@ get_stale_cmd = BASEPYTHON + BASEDIR + "late_updated_datasets.py"
 t4 = BashOperator(
         task_id= 'stale_delayed_datasets',
         bash_command=get_stale_cmd,
-        dag=dag,
-        trigger_rule="all_done",
+        dag=dag
 )
 
 
@@ -105,7 +96,7 @@ dag2 = DAG(
     default_args=WORKFLOW_DEFAULT_ARGS,
     start_date=WORKFLOW_START_DATE,
     schedule_interval='01 * * * *',
-    catchup=False,
+
  )
 
 #stale_delayed_datasets_digest_cmd = "python2 /Users/j9/Desktop/data-portal-monitoring/digest_late_updated_datasets.py"
@@ -115,14 +106,12 @@ t5 = BashOperator(
         task_id='stale_delayed_datasets_digest',
         bash_command=stale_delayed_datasets_digest_cmd,
         dag=dag2
-        trigger_rule="all_done",
-        #depends_on_past=False
 )
 
 t11 = BashOperator(
         task_id= 'portal_activities',
         bash_command=get_datasets_cmd,
-        dag=dag2,
+        dag=dag2
         #depends_on_past=False
 )
 digest = SubDagOperator(
@@ -133,13 +122,13 @@ digest = SubDagOperator(
 )
 
 dag >> t1 #>> t2 >> t3 >> t4
-t1 >> t2 
-t2 >> t3 
-t3 >> t4
+t2.set_upstream(t1) 
+t3.set_upstream(t1)
+t4.set_upstream(t1)
 #t1 >> digest
 
 dag2 >> t11
-t11 >> t5
+t5.set_upstream(t11)
 
 #test for dags
 #airflow test data_monitoring_workflow_dag portal_activities 2017-11-27
@@ -147,4 +136,4 @@ t11 >> t5
 #airflow test data_monitoring_workflow_dag created_datasets 2017-11-27
 #airflow test data_monitoring_workflow_dag stale_delayed_datasets 2017-11-27
 #airflow test data_monitoring_workflow_dag.data_monitoring_workflow_dag.digest_dag stale_delayed_datasets_digest 2017-11-27
-#$airflow backfill -m -s "2016-12-10 12:00" -e "2016-12-10 14:00" users_etl
+#airflow backfill data_monitoring_workflow_dag -m -s "2017-11-30T00:00" -e "2017-11-30T12:00" 
