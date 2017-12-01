@@ -16,5 +16,11 @@ ps -ef | grep airflow | awk '{print $2}' | xargs kill -9
 airflow scheduler -D
 
 #start the webserver
-airflow webserver -D 
+airflow webserver -D &>/dev/null
 #default port is 8080
+
+
+#this will run as a crontab job when the server gets restarted.
+#https://askubuntu.com/questions/814/how-to-run-scripts-on-start-up
+
+#@reboot /home/airflow/airflow/restart_airflow.sh
