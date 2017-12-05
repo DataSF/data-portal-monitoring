@@ -114,7 +114,7 @@ dag2 = DAG(
     dag_id='data_monitoring_late_updated_digest_dag', 
     default_args=WORKFLOW_DEFAULT_ARGS,
     start_date=WORKFLOW_START_DATE,
-    schedule_interval='0 */12 * * *',
+    schedule_interval='30 */12 * * *',
  )
 
 #stale_delayed_datasets_digest_cmd = "python2 /Users/j9/Desktop/data-portal-monitoring/digest_late_updated_datasets.py"
@@ -136,6 +136,28 @@ latest_only2 = LatestOnlyOperator(task_id='latest_only2', dag=dag2)
 t11.set_upstream(latest_only2)
 t5.set_upstream(t11)
 
+
+
+#run thje digest every 12 hours
+dag3 = DAG(
+    dag_id='rotate_portal_activity_tbl_dag', 
+    default_args=WORKFLOW_DEFAULT_ARGS,
+    start_date=WORKFLOW_START_DATE,
+    schedule_interval='0 2 * * 2,
+ )
+
+#stale_delayed_datasets_digest_cmd = "python2 /Users/j9/Desktop/data-portal-monitoring/digest_late_updated_datasets.py"
+#stale_delayed_datasets_digest_cmd = "python /data-portal-monitoring/digest_late_updated_datasets.py"
+rotate_portal_activity_data_cmd = BASEPYTHON + BASEDIR + "rotate_portal_activity_data.py"
+t6 = BashOperator(
+        task_id='rotate_portal_activity_table',
+        bash_command=rotate_portal_activity_data_cmd,
+        dag=dag3
+)
+
+
+latest_only3 = LatestOnlyOperator(task_id='latest_only2', dag=dag2)
+t6.set_upstream(latest_only2)
 
 
 

@@ -53,7 +53,10 @@ activity:
       subject_line: STALE and DELAYED DATASETS PORTAL ACTIVITY DIGEST
       subject_line_action: datasets have a publishing health of stale or deleted
       msg_header: <h3> The following datasets have a publishing health of stale or deleted:</h3>
-
+  rotate_portal_activity:
+    email_msg: 
+      subject_line: ROTATE Portal Activity Data - Dropped Chunks older than 2 weeks from the portal_activity table
+      msg: Dropped Chunks older than 2 weeks from the portal_activity table
 email_msg_template:
   header:  <html> <head> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"></head><body><container>
   footer: </container></body></html>

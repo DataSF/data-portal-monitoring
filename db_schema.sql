@@ -23,7 +23,15 @@ UPDATE  portal_activity
 --   using the values in the `time` column.
 SELECT create_hypertable('portal_activity', 'time');
 -- see this for more info: http://docs.timescale.com/latest/api/api-timescaledb#create_hypertable-best-practices
+-- timescaledb divides dat into time chunks. This makes performance better; by dividing into chunks it
+-- feels like a continuous table but its chunks
 
+SELECT set_chunk_time_interval('portal_activity', 604800000000);
+-- set the chunk interval to a week- means we are dividing the hypertable into week long chunks
+-- we will use this when we delete  old data out of the portal activity table ot prevent it from getting too big
+--drop_chunks()
+-- Removes data chunks that are older than a given time interval across all hypertables or a specific one. Chunks are removed only if ​all​ of their data is beyond the cut-off point, so the remaining data may contain timestamps that are before the cut-off point, but only one chunk's worth.
+-- SELECT drop_chunks(interval '2 weeks', 'portal_activity');
 
 
 

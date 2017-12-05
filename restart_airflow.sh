@@ -23,4 +23,4 @@ airflow webserver -D &>/dev/null
 #this will run as a crontab job when the server gets restarted.
 #https://askubuntu.com/questions/814/how-to-run-scripts-on-start-up
 
-#@reboot /home/airflow/airflow/restart_airflow.sh
+#@reboot /home/airflow/airflow/restart_airflow.sh &>/dev/null
