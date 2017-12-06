@@ -7,20 +7,46 @@ from PostgresStuff import *
 from ConfigUtils import *
 from Emailer import *
 
+def getMetadata(page, url):
+    return requests.get(url, params={'page': page, 'limit': 1000}).json()
+
+
+def parseDt(dt):
+  dt = dt.replace("T", " ")
+  dt = dt.split("+")
+  dt = dt[0]
+  return dt
+
 
 def getDataFromWeb(configItems):
-  r = requests.get(configItems['views_json_url'])
-  datasets = r.json()
-  return datasets['results']
+  results = []
+  url = configItems['views_json_url']
+  page = 1
+  metadata = getMetadata(page, url)
+  while len(metadata) > 0:
+    results.extend(metadata)
+    page += 1
+    metadata = getMetadata(page, url)
+    #print ()
+    #print(metadata)
+    #print ("********")
+    #print (page)
+    #print ()
+  return results
+  #  r = requests.get(configItems['views_json_url'])
+  #  datasets = r.json()
+  #  return datasets['results']
 
 def getName(dataset):
   name = None
-  name = dataset["view"]['name']
+  #name = dataset["view"]['name']
+  name = dataset['name']
   return name
 
 def getCreatedAt(dataset, dt_format):
   created_at = None
-  created_at = DateUtils.convertEpochToStrTime( dataset["view"]['createdAt'], dt_format)
+  #created_at = DateUtils.convertEpochToStrTime( dataset["view"]['createdAt'], dt_format)
+  created_at = parseDt(dataset['createdAt'])
   return created_at
 
 
@@ -52,20 +78,31 @@ def calculatePublishingHealth(dt_format, pub_freq, monitoring_time, last_updt):
 
 def getRowsUpdatedAt(dataset,  dt_format):
   rows_updated = None
-  if 'rowsUpdatedAt' in dataset["view"].keys():
-    rows_updated =  DateUtils.convertEpochToStrTime( dataset["view"]['rowsUpdatedAt'], dt_format)
+  if 'dataUpdatedAt' in dataset.keys():
+    if not(dataset['dataUpdatedAt'] is None):
+      rows_updated = parseDt(dataset['dataUpdatedAt'])
+  #if 'rowsUpdatedAt' in dataset["view"].keys():
+  #  rows_updated =  DateUtils.convertEpochToStrTime( dataset["view"]['rowsUpdatedAt'], dt_format)
   return rows_updated
 
 def getPubDept(dataset):
   pub_dept = None
-  pub_dept =  dataset['view']["metadata"]["custom_fields"]["Department Metrics"]["Publishing Department"]
+  #pub_dept =  dataset['view']["metadata"]["custom_fields"]["Department Metrics"]["Publishing Department"]
+  if not(dataset['customFields'] is None):
+    if "Department Metrics" in dataset["customFields"].keys():
+      if "Publishing Department" in dataset["customFields"]["Department Metrics"].keys():
+        pub_dept =  dataset["customFields"]["Department Metrics"]["Publishing Department"]
   return pub_dept
 
 def getPublishingDetails(dataset):
   pub_freq = None
-  if 'Publishing Details' in dataset['view']["metadata"]["custom_fields"].keys():
-    if "Publishing frequency" in dataset['view']["metadata"]["custom_fields"]["Publishing Details"].keys():
-      pub_freq =  dataset['view']["metadata"]["custom_fields"]["Publishing Details"]["Publishing frequency"]
+  #if 'Publishing Details' in dataset['view']["metadata"]["custom_fields"].keys():
+  if not (dataset['customFields'] is None):
+    if 'Publishing Details' in dataset["customFields"].keys():
+      if "Publishing frequency" in dataset["customFields"]["Publishing Details"].keys():
+        #if "Publishing frequency" in dataset['view']["metadata"]["custom_fields"]["Publishing Details"].keys():
+        #pub_freq =  dataset['view']["metadata"]["custom_fields"]["Publishing Details"]["Publishing frequency"]
+        pub_freq =  dataset["customFields"]["Publishing Details"]["Publishing frequency"]
   return pub_freq
 
 def parseResults(conn, datasets_tbl, dataset):
@@ -73,14 +110,16 @@ def parseResults(conn, datasets_tbl, dataset):
   fields = []
   monitoring_time = DateUtils.getCurrentTimestampAnyFormat(dt_format)
   fields.append(monitoring_time)
-  fields.append(dataset["view"]['id'])
+  #fields.append(dataset["view"]['id'])
+  fields.append(dataset['id'])
   fields.append(getName(dataset))
   fields.append(getCreatedAt(dataset, dt_format))
   last_updt = getRowsUpdatedAt(dataset, dt_format)
   fields.append(last_updt)
   pub_freq = None
   pub_dept = None
-  if 'custom_fields' in dataset['view']["metadata"].keys():
+  if 'customFields' in dataset.keys():
+  #if 'custom_fields' in dataset['view']["metadata"].keys():
     pub_dept = getPubDept(dataset)
     pub_freq = getPublishingDetails(dataset)
   fields.append(pub_dept)
@@ -120,6 +159,7 @@ def main():
   conn = PostgresStuff.connect(db_ini)
   db_tbl = configItems['activity_table']
   datasets = getDataFromWeb(configItems)
+  print (len(datasets))
   for dataset in datasets:
     fields = parseResults(conn, db_tbl, dataset)
     inserted_rows = dumpDatasetRecords(conn, db_tbl, fields)

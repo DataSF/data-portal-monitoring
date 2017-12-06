@@ -5,8 +5,8 @@ report_output_dir: output
 config_dir: /configs/
 time_zone_difference: 7
 
-views_json_url: https://data.sfgov.org/api/search/views.json
-
+#views_json_url: https://data.sfgov.org/api/search/views.json
+views_json_url: https://data.sfgov.org/api/views/metadata/v1
 
 activity:
   create:
