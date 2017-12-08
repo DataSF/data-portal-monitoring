@@ -30,8 +30,8 @@ fi
  
 source "${CONFIG_FILE_PATH}"
  
-export PGPASSWORD="$DB_PASS"
-
+export PGPASSWORD=
+echo "$DB_PASS" | base64 --decode
 
 ###########################
 #### PRE-BACKUP CHECKS ####
