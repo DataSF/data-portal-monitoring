@@ -30,6 +30,9 @@ fi
  
 source "${CONFIG_FILE_PATH}"
  
+export PGPASSWORD="$DB_PASS"
+
+
 ###########################
 #### PRE-BACKUP CHECKS ####
 ###########################
