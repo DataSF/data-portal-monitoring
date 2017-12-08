@@ -29,10 +29,13 @@ if [ ! -r ${CONFIG_FILE_PATH} ] ; then
 fi
  
 source "${CONFIG_FILE_PATH}"
- 
-export PGPASSWORD=
-echo "$DB_PASS" | base64 --decode
+DB_PASS="$DB_PASS"
+echo $DB_PASS
+DECODED_PASS=`echo $DB_PASS| base64 -d`
+echo $DECODED_PASS
+export PGPASSWORD="$DECODED_PASS"
 
+DB_PASS_DECODED=
 ###########################
 #### PRE-BACKUP CHECKS ####
 ###########################
