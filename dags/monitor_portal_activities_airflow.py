@@ -168,7 +168,7 @@ dag4 = DAG(
  )
 
 #backs up db
-backup_database_cmd == BASEDIR + "pg_backup_rotated.sh"
+backup_database_cmd = BASEDIR + "pg_backup_rotated.sh"
 t7= BashOperator(
         task_id='backup_pg_databases',
         bash_command=backup_database_cmd,
@@ -176,7 +176,7 @@ t7= BashOperator(
 )
 
 #moves backup to other server
-move_backup_cmds == BASEDIR + "move_backups.sh"
+move_backup_cmds = BASEDIR + "move_backups.sh"
 t8= BashOperator(
         task_id='move_database_backups',
         bash_command=move_backup_cmds,
