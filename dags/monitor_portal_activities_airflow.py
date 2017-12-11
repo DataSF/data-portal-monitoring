@@ -148,7 +148,7 @@ dag3 = DAG(
 
 rotate_portal_activity_data_cmd = BASEPYTHON + BASEDIR + "rotate_portal_activity_data.py"
 t6 = BashOperator(
-        task_id='rotate_portal_activity_table',
+        task_id='data_monitoring_rotate_portal_activity_table',
         bash_command=rotate_portal_activity_data_cmd,
         dag=dag3
 )
@@ -161,7 +161,7 @@ t6.set_upstream(latest_only3)
 
 #dag to run the backup scripts once a day
 dag4 = DAG(
-    dag_id='backup_pg_databases', 
+    dag_id='data_monitoring_backup_pg_databases', 
     default_args=WORKFLOW_DEFAULT_ARGS,
     start_date=WORKFLOW_START_DATE,
     schedule_interval='0 4 * * *',
