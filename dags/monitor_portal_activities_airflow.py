@@ -172,18 +172,18 @@ backup_database_cmd == BASEDIR + "pg_backup_rotated.sh"
 t7= BashOperator(
         task_id='backup_pg_databases',
         bash_command=backup_database_cmd,
-        dag=dag3
+        dag=dag4
 )
 
 #moves backup to other server
 move_backup_cmds == BASEDIR + "move_backups.sh"
 t8= BashOperator(
-        task_id='backup_pg_databases',
-        bash_command=backup_database_cmd,
-        dag=dag3
+        task_id='move_database_backups',
+        bash_command=move_backup_cmds,
+        dag=dag4
 )
 
-latest_only4 = LatestOnlyOperator(task_id='latest_only5', dag=dag4)
+latest_only4 = LatestOnlyOperator(task_id='latest_only4', dag=dag4)
 t7.set_upstream(latest_only4)
 t8.set_upstream(t7)
 #
