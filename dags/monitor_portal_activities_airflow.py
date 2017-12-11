@@ -140,7 +140,7 @@ t5.set_upstream(t11)
 
 #dag to drop the chunks on the portal_activity hypertablethat are older than two weeks
 dag3 = DAG(
-    dag_id='rotate_portal_activity_tbl_dag', 
+    dag_id='data_monitoring_rotate_portal_activity_tbl_dag', 
     default_args=WORKFLOW_DEFAULT_ARGS,
     start_date=WORKFLOW_START_DATE,
     schedule_interval='0 2 * * 2',
