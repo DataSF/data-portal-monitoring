@@ -138,16 +138,14 @@ t5.set_upstream(t11)
 
 
 
-#run thje digest every 12 hours
+#dag to drop the chunks on the portal_activity hypertablethat are older than two weeks
 dag3 = DAG(
     dag_id='rotate_portal_activity_tbl_dag', 
     default_args=WORKFLOW_DEFAULT_ARGS,
     start_date=WORKFLOW_START_DATE,
-    schedule_interval='0 2 * * 2,
+    schedule_interval='0 2 * * 2',
  )
 
-#stale_delayed_datasets_digest_cmd = "python2 /Users/j9/Desktop/data-portal-monitoring/digest_late_updated_datasets.py"
-#stale_delayed_datasets_digest_cmd = "python /data-portal-monitoring/digest_late_updated_datasets.py"
 rotate_portal_activity_data_cmd = BASEPYTHON + BASEDIR + "rotate_portal_activity_data.py"
 t6 = BashOperator(
         task_id='rotate_portal_activity_table',
@@ -156,9 +154,39 @@ t6 = BashOperator(
 )
 
 
-latest_only3 = LatestOnlyOperator(task_id='latest_only2', dag=dag2)
-t6.set_upstream(latest_only2)
+latest_only3 = LatestOnlyOperator(task_id='latest_only3', dag=dag3)
+t6.set_upstream(latest_only3)
 
+
+
+#dag to run the backup scripts once a day
+dag4 = DAG(
+    dag_id='backup_pg_databases', 
+    default_args=WORKFLOW_DEFAULT_ARGS,
+    start_date=WORKFLOW_START_DATE,
+    schedule_interval='0 4 * * *',
+ )
+
+#backs up db
+backup_database_cmd == BASEDIR + "pg_backup_rotated.sh"
+t7= BashOperator(
+        task_id='backup_pg_databases',
+        bash_command=backup_database_cmd,
+        dag=dag3
+)
+
+#moves backup to other server
+move_backup_cmds == BASEDIR + "move_backups.sh"
+t8= BashOperator(
+        task_id='backup_pg_databases',
+        bash_command=backup_database_cmd,
+        dag=dag3
+)
+
+latest_only4 = LatestOnlyOperator(task_id='latest_only5', dag=dag4)
+t7.set_upstream(latest_only4)
+t8.set_upstream(t7)
+#
 
 
 

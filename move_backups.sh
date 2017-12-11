@@ -31,4 +31,6 @@ echo $FINAL_BACKUP_DIR
 SUFFIX2=$SUFFIX".tar.gz"
 ARCHIVE="`date +\%Y-\%m-\%d`$SUFFIX2"
 tar -zcvf $BACKUP_DIR$ARCHIVE $FINAL_BACKUP_DIR
+
+# use ssh private and publish keys move the files- eliminates the need to passwords. 
 scp -i /home/j9/.ssh/id_rsa $BACKUP_DIR$ARCHIVE "pgbackups@162.243.137.94:/home/pgbackups/data_monitoring_backups"
