@@ -45,6 +45,7 @@ ssh ubuntu@xxx.xxx.xxx.xxx
 
 ## Airflow Dag Tutorial
 
+![] (https://github.com/DataSF/datasf-portal-monitoring/blob/master/airflowscreen.png)
 There are 4 dags that run various jobs:
 
 1. Data_monitoring_workflow_dag - handles updating the the portal_activity table.
