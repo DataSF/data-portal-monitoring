@@ -20,30 +20,7 @@
 7. Start up airflow webUI and airflow scheduler: A restart script is included in this repository. Run: `restart_airflow.sh`
 8. Go to http://@xxx.xxx.xxx.xxx:8080/admin/  to see the airflow instance run the monitoring jobs
 
-## Various other activities
-
-1. Log onto to server
-ssh ubuntu@xxx.xxx.xxx.xxx 
-2. How to check if Postgres/Timescale DB is Up and Running
-	`$ sudo service postgresql status`
-3. Restart PostgresDB
-	If postgres db isn’t running, run the following cmds	`$ sudo service postgresql restart`
-4. How to check if Airflow is Running
-	- Airflow has two parts: a scheduler service responsible for running the actual dags, and http webserver service for the airflow UI
-
-5. Airflow Webserver
-	- try logging into airflow UI at:  http://@xxx.xxx.xxx.xxx:8080/admin/ 
-	- If you can’t do that, the webserver is probably down. Also to note,  you can check to see if there is a webserver process running: `$ ps ax | grep airflow-webserver`
-
-6. Airflow Scheduler 
-	- If the last run times on the airflow dag UI aren’t recent, there is a good chance that scheduler is down. You can also check for airflow scheduler processes by running: `$ ps ax | grep "airflow scheduler"`
-
-7. Restarting the Airflow Scheduler and Web UI
-	- Log onto server as ubuntu user
-	- Run the following comman `$ /home/airflow/airflow/restart_airflow.sh `
-	- Go to http://@xxx.xxx.xxx.xxx:8080/admin/ and log in
-
-## Airflow Dag Tutorial
+## Monitoring Jobs/Dags in this repo: 
 
 ![](https://github.com/DataSF/datasf-portal-monitoring/blob/master/airflowscreen.png)
 
@@ -206,7 +183,30 @@ Investigate causes of problems by first examining data portal activity metrics, 
 
 At DataSF, we have just begun the process of setting up a way to comprehensive monitoring program of our open data portal. We would love to hear about your experiences monitoring your open data portal. If you have comments, questions, additions, corrections or complaints, let us know on twitter! We’d love to hear from you. 
 
-## References
+## Various Server Admin Activities
+
+1. Log onto to server
+ssh ubuntu@xxx.xxx.xxx.xxx 
+2. How to check if Postgres/Timescale DB is Up and Running
+	`$ sudo service postgresql status`
+3. Restart PostgresDB
+	If postgres db isn’t running, run the following cmds	`$ sudo service postgresql restart`
+4. How to check if Airflow is Running
+	- Airflow has two parts: a scheduler service responsible for running the actual dags, and http webserver service for the airflow UI
+
+5. Airflow Webserver
+	- try logging into airflow UI at:  http://@xxx.xxx.xxx.xxx:8080/admin/ 
+	- If you can’t do that, the webserver is probably down. Also to note,  you can check to see if there is a webserver process running: `$ ps ax | grep airflow-webserver`
+
+6. Airflow Scheduler 
+	- If the last run times on the airflow dag UI aren’t recent, there is a good chance that scheduler is down. You can also check for airflow scheduler processes by running: `$ ps ax | grep "airflow scheduler"`
+
+7. Restarting the Airflow Scheduler and Web UI
+	- Log onto server as ubuntu user
+	- Run the following comman `$ /home/airflow/airflow/restart_airflow.sh `
+	- Go to http://@xxx.xxx.xxx.xxx:8080/admin/ and log in
+
+## Monitoring References
 - Alexis Lê-Quôc, (2015, June 30). Monitoring 101: Collecting the right data. Retrieved from https://www.datadoghq.com/blog/monitoring-101-collecting-data
 - Alexis Lê-Quôc, (2015, July 16). Monitoring 101: Investigating Performance Issues. Retrieved from https://www.datadoghq.com/blog/monitoring-101-investigation/
 - Alexis Lê-Quôc, (2015, July 16). Monitoring 101: Alerting on What Matters. Retrieved from https://www.datadoghq.com/blog/monitoring-101-alerting/
