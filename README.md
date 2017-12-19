@@ -13,12 +13,53 @@
 
 1. Clone the repository
 2. Modify the  email_config.yaml and portal_activity_job_config.yaml file to reflect your situation. 
-3. Then run `setup.sh`
-	1. This script will build a custom docker image with airflow and the tools in this repo
-	2. Docker compose will instantiate a airflow image with the monitoring jobs and a timescaledb database
-	3. All your timescaledb data default into a docker volume, at ./postgres-data. You can change the location of this volume in the docker-compose.yaml file 
+3. Install Postgres and Timescale db
+4. Install airflow 
+5. Start up postgres/timescale db
+6. Start up airflow webUI and airflow scheduler: A restart script is included in this repository. Run: `restart_airflow.sh`
+7. Go to http://localhost:8080/admin/ to see the airflow instance run the monitoring jobs
 
-4. Go to http://localhost:8080/admin/ to see the airflow instance run the monitoring jobs
+## Various other activities
+
+1. Log onto to server
+ssh ubuntu@xxx.xxx.xxx.xxx 
+2. How to check if Postgres/Timescale DB is Up and Running
+	`$ sudo service postgresql status`
+3. Restart PostgresDB
+	If postgres db isn’t running, run the following cmds	`$ sudo service postgresql restart`
+4. How to check if Airflow is Running
+	- Airflow has two parts: a scheduler service responsible for running the actual dags, and http webserver service for the airflow UI
+
+5. Airflow Webserver
+	- try logging into airflow UI at:  http://@xxx.xxx.xxx.xxx:8080/admin/ 
+	- If you can’t do that, the webserver is probably down. Also to note,  you can check to see if there is a webserver process running: `$ ps ax | grep airflow-webserver`
+
+6. Airflow Scheduler 
+	- If the last run times on the airflow dag UI aren’t recent, there is a good chance that scheduler is down. You can also check for airflow scheduler processes by running: `$ ps ax | grep "airflow scheduler"`
+
+7. Restarting the Airflow Scheduler and Web UI
+	- Log onto server as ubuntu user
+	- Run the following comman `$ /home/airflow/airflow/restart_airflow.sh `
+	- Go to http://162.243.143.214:8080/admin/ 
+Creds are in passpack under the entry: “airflow Web UI user”	
+
+Airflow Dag Tutorial
+
+
+There are 4 dags that run various jobs:
+
+Data_monitoring_workflow_dag - handles updating the the portal_activity table.
+Runs the following jobs:
+Portal activity:  grabs a snapshot of datasets on the activity
+Created Datasets: finds dataset that were created in the last half and hour
+Deleted datasets: finds datasets that were deleted in the last half and hour
+Stale and delayed datasets: finds all the datasets are late to update- ie that have a publishing heallth of stale or delayed
+Data_monitoring_late_updated_digest_dag
+A job that creates an html email digest of the all that datasets that have a publishing health of stale or delayed
+Data_monitoring_backup_pg_databases
+Backups data monitoring and airflow databases; moves backup copies to another server
+Data_monitoring_rotate_portal_activity_tbl_dag
+rotates / drops all timescale db chunks older than two weeks old
 
 
 The article below provides a general overview on how to monitor an municipal open data portal. 
