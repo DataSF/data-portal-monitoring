@@ -14,10 +14,11 @@
 1. Clone the repository
 2. Modify the  email_config.yaml and portal_activity_job_config.yaml file to reflect your situation. 
 3. Install Postgres and Timescale db
-4. Install airflow 
-5. Start up postgres/timescale db
-6. Start up airflow webUI and airflow scheduler: A restart script is included in this repository. Run: `restart_airflow.sh`
-7. Go to http://localhost:8080/admin/ to see the airflow instance run the monitoring jobs
+4. Start up postgres/timescale db
+5. Install airflow 
+6. Configure airflow
+7. Start up airflow webUI and airflow scheduler: A restart script is included in this repository. Run: `restart_airflow.sh`
+8. Go to http://@xxx.xxx.xxx.xxx:8080/admin/  to see the airflow instance run the monitoring jobs
 
 ## Various other activities
 
@@ -40,32 +41,32 @@ ssh ubuntu@xxx.xxx.xxx.xxx
 7. Restarting the Airflow Scheduler and Web UI
 	- Log onto server as ubuntu user
 	- Run the following comman `$ /home/airflow/airflow/restart_airflow.sh `
-	- Go to http://162.243.143.214:8080/admin/ 
-Creds are in passpack under the entry: “airflow Web UI user”	
+	- Go to http://@xxx.xxx.xxx.xxx:8080/admin/ and log in
 
-Airflow Dag Tutorial
-
+## Airflow Dag Tutorial
 
 There are 4 dags that run various jobs:
 
-Data_monitoring_workflow_dag - handles updating the the portal_activity table.
-Runs the following jobs:
-Portal activity:  grabs a snapshot of datasets on the activity
-Created Datasets: finds dataset that were created in the last half and hour
-Deleted datasets: finds datasets that were deleted in the last half and hour
-Stale and delayed datasets: finds all the datasets are late to update- ie that have a publishing heallth of stale or delayed
-Data_monitoring_late_updated_digest_dag
-A job that creates an html email digest of the all that datasets that have a publishing health of stale or delayed
-Data_monitoring_backup_pg_databases
-Backups data monitoring and airflow databases; moves backup copies to another server
-Data_monitoring_rotate_portal_activity_tbl_dag
-rotates / drops all timescale db chunks older than two weeks old
+1. Data_monitoring_workflow_dag - handles updating the the portal_activity table.
+	- Runs the following jobs:
+	1. Portal activity:  grabs a snapshot of datasets on the activity
+	2. Created Datasets: finds dataset that were created in the last half and hour
+	3. Deleted datasets: finds datasets that were deleted in the last half and hour
+	4. Stale and delayed datasets: finds all the datasets are late to update- ie that have a publishing heallth of stale or delayed
+
+2. Data_monitoring_late_updated_digest_dag
+	1. A job that creates an html email digest of the all that datasets that have a publishing health of stale or delayed
+3. Data_monitoring_backup_pg_databases
+	1. Backups data monitoring and airflow databases; 
+	2. moves backup tar.gz files to another server for self keeping
+4. Data_monitoring_rotate_portal_activity_tbl_dag
+	1. rotates / drops all timescale db chunks older than two weeks old
 
 
+# [How to Monitor Your Open Data Portal](https://docs.google.com/document/d/1BKHuxtOr0uZMlejgqnUZt-BoVaZ52VBDxXpdFXzLpTU/edit?usp=sharing)
 The article below provides a general overview on how to monitor an municipal open data portal. 
 This repository contains tools to continuously gather open data activity metrics and send out related notifications around these events. 
 
-# [How to Monitor Your Open Data Portal](https://docs.google.com/document/d/1BKHuxtOr0uZMlejgqnUZt-BoVaZ52VBDxXpdFXzLpTU/edit?usp=sharing)
 
 Having monitoring data is a necessary condition for observability into the inner workings of your  open data portal. 
 At DataSF, we strive to:
